@@ -1,9 +1,13 @@
 <script setup>
-import TheWelcome from '../components/TheWelcome.vue'
+import NavBar from '@/components/NavBar.vue'
+import '@/assets/main.css'
 </script>
 
 <template>
-  <main>
-    <TheWelcome />
-  </main>
+  <div class="flex-container">
+    <div class="header">
+      <NavBar></NavBar>
+    </div>
+    <div class="main"></div>
+  </div>
 </template>
