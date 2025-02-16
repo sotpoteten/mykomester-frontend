@@ -8,6 +8,44 @@ import '@/assets/main.css'
     <div class="header">
       <NavBar></NavBar>
     </div>
-    <div class="main"></div>
+    <div class="main">
+      <div class="content-box" id="left"></div>
+      <div id="right">
+        <div class="content-box" id="top"></div>
+        <div class="content-box" id="mid"></div>
+        <div class="content-box" id="bottom"></div>
+      </div>
+    </div>
   </div>
 </template>
+
+<style scoped>
+#left {
+  background-color: #9c914f;
+  width: 40%;
+  margin-bottom: 10px;
+  margin-left: 10px;
+}
+
+#right {
+  display: flex;
+  flex-direction: column;
+  width: 60%;
+}
+
+#top {
+  background-color: #553739;
+  height: 40%;
+}
+
+#mid {
+  background-color: #955e42;
+  height: 40%;
+}
+
+#bottom {
+  background-color: #553739;
+  height: 20%;
+  margin-bottom: 10px;
+}
+</style>

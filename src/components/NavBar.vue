@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import app_logo from '@/assets/mushroom-drawing-6.png'
+import router from '@/router/index.js'
 
 const logo = ref(app_logo)
 </script>
@@ -8,12 +9,12 @@ const logo = ref(app_logo)
 <template>
   <div class="navbar">
     <img :src="logo" alt="logo" />
-    <h1 class="title">MykoMester</h1>
+    <h1 class="title" @click="router.push('/')">MykoMester</h1>
     <div class="buttons">
-      <button type="button" id="login" class="btn">
+      <button type="button" id="login" class="menubutton" @click="router.push('/login')">
         <h3>Logg inn</h3>
       </button>
-      <button type="button" id="login" class="btn">
+      <button type="button" id="register" class="menubutton" @click="router.push('/registrer')">
         <h3>Registrer deg</h3>
       </button>
     </div>
@@ -23,7 +24,14 @@ const logo = ref(app_logo)
 <style scoped>
 h1 {
   font-size: 50px;
+  font-weight: normal;
+  margin: 20px 20px;
 }
+
+h1:hover {
+  cursor: pointer;
+}
+
 .navbar {
   justify-content: flex-start;
   display: flex;
@@ -34,18 +42,8 @@ h1 {
   top: 0;
   background-color: #748e54;
   width: 100%;
-  height: 100%;
+  height: fit-content;
   z-index: 999;
-}
-
-.btn {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  margin: 10px 20px 10px 20px;
-  height: 100%;
-  border: none;
-  background-color: #748e54;
 }
 
 .buttons {
@@ -53,10 +51,11 @@ h1 {
   display: flex;
   align-items: flex-end;
   width: -webkit-fill-available;
+  height: fit-content;
 }
 
 img {
-  height: 100px;
+  height: 80px;
   margin: 10px;
 }
 </style>
