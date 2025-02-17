@@ -44,7 +44,7 @@ import '@/assets/main.css'
 }
 
 #bottom {
-  background-color: #553739;
+  background-color: #748e54;
   height: 20%;
   margin-bottom: 10px;
 }
