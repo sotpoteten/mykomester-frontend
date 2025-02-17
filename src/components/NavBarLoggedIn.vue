@@ -9,13 +9,16 @@ const logo = ref(app_logo)
 <template>
   <div class="navbar">
     <img :src="logo" alt="logo" />
-    <h1 class="title" @click="router.push('/')">MykoMester</h1>
+    <h1 class="title" @click="router.push('/start')">MykoMester</h1>
     <div class="buttons">
-      <button type="button" id="login" class="menubutton" @click="router.push('/login')">
-        <h3>Logg inn</h3>
+      <button type="button" id="start" class="menubutton" @click="router.push('/start')">
+        <h3>Start</h3>
       </button>
-      <button type="button" id="register" class="menubutton" @click="router.push('/registrer')">
-        <h3>Registrer deg</h3>
+      <button type="button" id="stats" class="menubutton" @click="router.push('/statistikk')">
+        <h3>Statistikk</h3>
+      </button>
+      <button type="button" id="profil" class="menubutton" @click="router.push('/profil')">
+        <h3>Min profil</h3>
       </button>
     </div>
   </div>

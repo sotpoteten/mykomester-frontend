@@ -1,6 +1,7 @@
 <script setup>
 import NavBar from '@/components/NavBar.vue'
 import '@/assets/main.css'
+import router from '@/router/index.js'
 </script>
 
 <template>
@@ -10,13 +11,15 @@ import '@/assets/main.css'
     </div>
     <div class="main">
       <div class="content-box" id="center">
-        <h2>Logg inn</h2>
-        <label for="username">E-post:</label>
-        <input type="text" id="username" />
-        <label for="password">Passord:</label>
-        <input type="password" id="password" />
-        <button class="submit">Logg inn</button>
-        <p>Glemt passord?</p>
+        <div class="wrapper">
+          <h2>Logg inn</h2>
+          <label for="email">E-post:</label>
+          <input type="text" id="email" />
+          <label>Passord:</label>
+          <input type="password" id="password" />
+          <button class="submit">Logg inn</button>
+          <p @click="router.push('/glemtpassord')">Glemt passord?</p>
+        </div>
       </div>
     </div>
   </div>
@@ -32,26 +35,6 @@ import '@/assets/main.css'
   justify-content: center;
   align-items: center;
   color: white;
-}
-
-input {
-  font-size: 15px;
-  border-radius: 5px;
-  border: none;
-}
-
-label {
-  margin: 10px;
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-.submit {
-  margin: 10px;
-  border: none;
-  border-radius: 3px;
-  background-color: #748e54;
-  width: 220px;
-  height: 30px;
 }
 
 p {

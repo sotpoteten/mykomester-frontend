@@ -19,6 +19,36 @@ const router = createRouter({
       name: 'registrer',
       component: () => import('../views/RegistrationView.vue'),
     },
+    {
+      path: '/glemtpassord',
+      name: 'glemtpassord',
+      component: () => import('../views/ForgottenPasswordView.vue'),
+    },
+    {
+      path: '/start',
+      name: 'start',
+      component: () => import('../views/StartView.vue'),
+    },
+    {
+      path: '/quiz',
+      name: 'quiz',
+      component: () => import('../views/QuizView.vue'),
+    },
+    {
+      path: '/resultater',
+      name: 'resultater',
+      component: () => import('../views/ResultView.vue'),
+    },
+    {
+      path: '/statistikk',
+      name: 'statistikk',
+      component: () => import('../views/StatsView.vue'),
+    },
+    {
+      path: '/profil',
+      name: 'profil',
+      component: () => import('../views/ProfileView.vue'),
+    },
   ],
 })
 

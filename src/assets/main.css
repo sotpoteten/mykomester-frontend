@@ -14,6 +14,7 @@ button:hover {
   width: 100vw;
   height: 100vh;
   font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  font-stretch: wider;
   position: absolute;
   overflow-x: hidden;
   background-color: #dcdcdc;
@@ -41,6 +42,7 @@ button:hover {
   font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
   font-size: 25px;
   font-weight: lighter;
+  color: white;
 
   h3 {
     font-weight: normal;
@@ -48,7 +50,8 @@ button:hover {
   }
 }
 
-h2 {
+h2,
+h3 {
   font-weight: normal;
 }
 
@@ -60,4 +63,34 @@ h2 {
   display: flex;
   margin: 10px 10px 0px 0px;
   border-radius: 10px;
+}
+
+input {
+  font-size: 15px;
+  border-radius: 5px;
+  border: none;
+  height: 25px;
+}
+
+label {
+  margin: 10px 0px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.submit {
+  margin: 10px 0px;
+  border: none;
+  border-radius: 5px;
+  background-color: #748e54;
+  width: 100%;
+  height: 30px;
+}
+
+.submit:hover {
+  text-decoration: underline;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
 }
