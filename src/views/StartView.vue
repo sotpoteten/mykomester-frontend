@@ -2,6 +2,7 @@
 import NavBar from '@/components/NavBarLoggedIn.vue'
 import '@/assets/main.css'
 import { ref } from 'vue'
+import router from '@/router/index.js'
 
 const numOfTasks = ref('30')
 const species = ref('Hele pensum')
@@ -26,7 +27,7 @@ const toggleSettings = () => {
           <h3>Arter: {{ species }}</h3>
           <h3>Quizmodus: {{ quizMode }}</h3>
           <h3>Svarmodus: {{ answerMode }}</h3>
-          <button id="startquiz">Start quiz</button>
+          <button id="startquiz" @click="router.push('/quiz')">Start quiz</button>
           <div id="avansert-wrapper" @click="toggleSettings">
             <v-icon name="bi-caret-down-fill" v-if="!settings" />
             <v-icon name="bi-caret-up-fill" v-if="settings" />

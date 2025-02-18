@@ -11,9 +11,18 @@ import {
   MdLogoutRound,
   MdSaveRound,
   MdLoginRound,
+  BiSendCheckFill,
 } from 'oh-vue-icons/icons'
 
-addIcons(BiCaretDownFill, BiCaretUpFill, BiTrophyFill, MdLogoutRound, MdSaveRound, MdLoginRound)
+addIcons(
+  BiCaretDownFill,
+  BiCaretUpFill,
+  BiTrophyFill,
+  MdLogoutRound,
+  MdSaveRound,
+  MdLoginRound,
+  BiSendCheckFill,
+)
 
 const app = createApp(App)
 
