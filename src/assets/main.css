@@ -93,7 +93,8 @@ label {
 }
 
 .submit:hover {
-  text-decoration: underline;
+  box-shadow: 3px 3px 3px black;
+  border: 1px solid black;
 }
 
 .wrapper {
