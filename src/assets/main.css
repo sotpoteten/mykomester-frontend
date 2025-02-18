@@ -85,6 +85,11 @@ label {
   background-color: #748e54;
   width: 100%;
   height: 30px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 2px 2px 2px black;
 }
 
 .submit:hover {
