@@ -17,7 +17,10 @@ import router from '@/router/index.js'
           <input type="text" id="email" />
           <label>Passord:</label>
           <input type="password" id="password" />
-          <button class="submit">Logg inn</button>
+          <button class="submit">
+            Logg inn
+            <v-icon name="md-login-round" />
+          </button>
           <p @click="router.push('/glemtpassord')">Glemt passord?</p>
         </div>
       </div>
@@ -45,5 +48,9 @@ p {
 
 p:hover {
   cursor: pointer;
+}
+
+svg {
+  margin-left: 10px;
 }
 </style>
