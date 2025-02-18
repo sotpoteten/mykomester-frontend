@@ -4,9 +4,9 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 import { OhVueIcon, addIcons } from 'oh-vue-icons'
-import { BiCaretDownFill, BiCaretUpFill } from 'oh-vue-icons/icons'
+import { BiCaretDownFill, BiCaretUpFill , BiTrophyFill} from 'oh-vue-icons/icons'
 
-addIcons(BiCaretDownFill, BiCaretUpFill)
+addIcons(BiCaretDownFill, BiCaretUpFill, BiTrophyFill)
 
 const app = createApp(App)
 
