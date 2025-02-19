@@ -22,7 +22,7 @@ import '@/assets/main.css'
 <style scoped>
 #left {
   background-color: #9c914f;
-  width: 40%;
+  flex-grow: 2;
   margin-bottom: 10px;
   margin-left: 10px;
 }
@@ -30,7 +30,8 @@ import '@/assets/main.css'
 #right {
   display: flex;
   flex-direction: column;
-  width: 60%;
+  flex-grow: 3;
+  height: 100%;
 }
 
 #top {

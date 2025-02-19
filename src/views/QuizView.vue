@@ -1,7 +1,18 @@
 <script setup>
 import '@/assets/main.css'
+import Paginator from 'primevue/paginator'
+import {ref} from 'vue';
 
-//import { VPagination } from 'vuetify/components/VPagination'
+const paginatorStyle = ref({
+  padding: 0,
+  background: '#748e54',
+  nav: {
+    button: {
+      color: '#000000',
+    },
+  },
+})
+
 </script>
 
 <template>
@@ -59,7 +70,7 @@ import '@/assets/main.css'
             <v-icon name="md-save-round" id="save-icon" />
             Lagre quiz til senere
           </button>
-          <!-- <v-pagination :length="10"></v-pagination>* -->
+          <Paginator rows="10" totalRecords="300" :dt="paginatorStyle" />
           <button class="submit" id="finish">
             Avslutt quiz
             <v-icon name="bi-send-check-fill" id="finish-icon" />
