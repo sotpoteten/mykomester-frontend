@@ -1,18 +1,42 @@
 <script setup>
 import '@/assets/main.css'
 import Paginator from 'primevue/paginator'
-import {ref} from 'vue';
+import { ref, computed } from 'vue'
 
+const first = ref(0)
+let taskNr = computed(() => (first.value + 10) / 10)
 const paginatorStyle = ref({
-  padding: 0,
+  padding: '3px',
   background: '#748e54',
   nav: {
     button: {
       color: '#000000',
+      hover: {
+        background: '#495836',
+        color: '#ffffff',
+      },
+      selected: {
+        background: '#353f27',
+        color: '#ffffff',
+      },
+      width: '24px',
+      height: '24px',
     },
   },
 })
 
+const shrooms = ['Bispelue', 'Fluesopp', 'Kantarell', 'Traktkantarell', 'Champingjog', 'Hattetatt']
+
+const searchList = computed(() => shrooms.filter(checkOccurance))
+
+const search = ref('')
+
+const twoTerms = computed(() => search.value.length > 1)
+
+function checkOccurance(mush) {
+  var filter = search.value.toUpperCase()
+  return mush.toUpperCase().indexOf(filter) > -1
+}
 </script>
 
 <template>
@@ -20,7 +44,7 @@ const paginatorStyle = ref({
     <div class="main">
       <div class="content-box" id="center">
         <div id="header-wrapper">
-          <h1>Oppgave {{ 1 }}</h1>
+          <h1>Oppgave {{ taskNr }}</h1>
         </div>
         <div id="img-wrapper">
           <img
@@ -31,7 +55,10 @@ const paginatorStyle = ref({
         <div id="container-wrapper">
           <div class="answer-container" id="species">
             <h2>Velg soppart:</h2>
-            <input type="search" size="30" />
+            <input type="search" size="30" v-model="search" @keyup="searchFilter" />
+            <ul id="search-list" v-if="twoTerms">
+              <li v-for="shroom in searchList" :key="shroom.id">{{ shroom }}</li>
+            </ul>
           </div>
           <div class="answer-container" id="normlist">
             <div class="radio-wrapper">
@@ -70,7 +97,7 @@ const paginatorStyle = ref({
             <v-icon name="md-save-round" id="save-icon" />
             Lagre quiz til senere
           </button>
-          <Paginator rows="10" totalRecords="300" :dt="paginatorStyle" />
+          <Paginator v-model:first="first" rows="10" totalRecords="300" :dt="paginatorStyle" />
           <button class="submit" id="finish">
             Avslutt quiz
             <v-icon name="bi-send-check-fill" id="finish-icon" />
@@ -173,7 +200,7 @@ textarea {
   width: 95%;
   justify-content: space-between;
   align-items: center;
-  margin: 10px 2.5%;
+  margin: 0px 2.5% 10px;
 }
 
 #save {
@@ -190,5 +217,32 @@ textarea {
 
 #finish-icon {
   margin-left: 5px;
+}
+
+nav {
+  box-shadow: 2px 2px 2px black;
+  border-radius: 6px;
+}
+
+#search-list {
+  /* Remove default list styling */
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+#search-list li {
+  border: 1px solid #ddd;
+  margin-top: -1px;
+  background-color: #f6f6f6;
+  padding: 2px;
+  font-size: 15px;
+  color: black;
+  display: block;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+#search-list li:hover {
+  background-color: #eee;
 }
 </style>
