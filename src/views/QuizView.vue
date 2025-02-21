@@ -2,7 +2,10 @@
 import '@/assets/main.css'
 import Paginator from 'primevue/paginator'
 import { ref, computed } from 'vue'
+import Dialog from 'primevue/dialog'
+import router from '@/router/index.js'
 
+const showExitDialog = ref(false)
 const first = ref(0)
 let taskNr = computed(() => (first.value + 10) / 10)
 const paginatorStyle = ref({
@@ -40,6 +43,19 @@ function checkOccurance(mush) {
 </script>
 
 <template>
+  <Dialog
+    :dt="dialogStyle"
+    v-model:visible="showExitDialog"
+    modal
+    header="Vil du avslutte?"
+    :style="{ width: '25rem' }"
+  >
+    <p>Denne handlingen kan ikke angres.</p>
+    <div class="button-wrapper">
+      <button class="submit" id="return" @click="showExitDialog = false">Tilbake</button>
+      <button class="submit" id="exit" @click="router.push('/resultater')">Avslutt</button>
+    </div>
+  </Dialog>
   <div class="flex-container">
     <div class="main">
       <div class="content-box" id="center">
@@ -98,7 +114,7 @@ function checkOccurance(mush) {
             Lagre quiz til senere
           </button>
           <Paginator v-model:first="first" rows="10" totalRecords="300" :dt="paginatorStyle" />
-          <button class="submit" id="finish">
+          <button class="submit" id="finish" @click="showExitDialog = true">
             Avslutt quiz
             <v-icon name="bi-send-check-fill" id="finish-icon" />
           </button>
@@ -244,5 +260,34 @@ nav {
 
 #search-list li:hover {
   background-color: #eee;
+}
+
+::v-global(.p-dialog) {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+p {
+  margin-top: 0;
+}
+
+#return {
+  margin: 10px 5px 10px 0px;
+  border: none;
+  border-radius: 5px;
+  background-color: #dcdcdc;
+  width: fit-content;
+  height: 30px;
+  color: black;
+  padding: 5px;
+}
+
+#exit {
+  width: fit-content;
+}
+
+.button-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
 }
 </style>
