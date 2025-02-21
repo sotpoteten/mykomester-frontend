@@ -15,6 +15,8 @@ import {
 } from 'oh-vue-icons/icons'
 import PrimeVue from 'primevue/config'
 import Aura from '@primevue/themes/aura'
+import ConfirmationService from 'primevue/confirmationservice'
+import ToastService from 'primevue/toastservice'
 
 addIcons(
   BiCaretDownFill,
@@ -28,7 +30,6 @@ addIcons(
 
 const app = createApp(App)
 
-
 app.component('v-icon', OhVueIcon)
 app.use(createPinia())
 app.use(router)
@@ -37,5 +38,7 @@ app.use(PrimeVue, {
     preset: Aura,
   },
 })
+app.use(ConfirmationService)
+app.use(ToastService)
 
 app.mount('#app')
