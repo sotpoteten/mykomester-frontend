@@ -6,6 +6,8 @@ import Dialog from 'primevue/dialog'
 import router from '@/router/index.js'
 
 const showExitDialog = ref(false)
+const showSaveDialog = ref(false)
+
 const first = ref(0)
 let taskNr = computed(() => (first.value + 10) / 10)
 const paginatorStyle = ref({
@@ -44,7 +46,6 @@ function checkOccurance(mush) {
 
 <template>
   <Dialog
-    :dt="dialogStyle"
     v-model:visible="showExitDialog"
     modal
     header="Vil du avslutte?"
@@ -54,6 +55,13 @@ function checkOccurance(mush) {
     <div class="button-wrapper">
       <button class="submit" id="return" @click="showExitDialog = false">Tilbake</button>
       <button class="submit" id="exit" @click="router.push('/resultater')">Avslutt</button>
+    </div>
+  </Dialog>
+  <Dialog v-model:visible="showSaveDialog" modal header="Vil du lagre?" :style="{ width: '25rem' }">
+    <p>Du blir nå sendt ut av quizen, men svarene lagres til senere.</p>
+    <div class="button-wrapper">
+      <button class="submit" id="return" @click="showSaveDialog = false">Tilbake</button>
+      <button class="submit" id="exit" @click="router.push('/start')">Avslutt</button>
     </div>
   </Dialog>
   <div class="flex-container">
@@ -109,7 +117,7 @@ function checkOccurance(mush) {
           </div>
         </div>
         <div id="navigation-wrapper">
-          <button class="submit" id="save">
+          <button class="submit" id="save" @click="showSaveDialog = true">
             <v-icon name="md-save-round" id="save-icon" />
             Lagre quiz til senere
           </button>
