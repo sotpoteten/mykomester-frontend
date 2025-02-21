@@ -28,6 +28,7 @@ button:hover {
   height: -webkit-fill-available;
   display: flex;
   flex-direction: row;
+  overflow: hidden;
 }
 
 .menubutton {
