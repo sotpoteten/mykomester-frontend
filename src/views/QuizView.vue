@@ -37,6 +37,7 @@ const searchList = computed(() => shrooms.filter(checkOccurance))
 const search = ref('')
 
 const twoTerms = computed(() => search.value.length > 1)
+const selected = ref(false)
 
 function checkOccurance(mush) {
   var filter = search.value.toUpperCase()
@@ -79,9 +80,26 @@ function checkOccurance(mush) {
         <div id="container-wrapper">
           <div class="answer-container" id="species">
             <h2>Velg soppart:</h2>
-            <input type="search" size="30" v-model="search" @keyup="searchFilter" />
-            <ul id="search-list" v-if="twoTerms">
-              <li v-for="shroom in searchList" :key="shroom.id">{{ shroom }}</li>
+            <input
+              type="search"
+              size="30"
+              v-model="search"
+              @keyup="searchFilter"
+              @click="selected = false"
+            />
+            <ul id="search-list" v-if="twoTerms && !selected">
+              <li
+                v-for="shroom in searchList"
+                :key="shroom.id"
+                @click="
+                  () => {
+                    search = shroom
+                    selected = true
+                  }
+                "
+              >
+                {{ shroom }}
+              </li>
             </ul>
           </div>
           <div class="answer-container" id="normlist">
@@ -249,7 +267,6 @@ nav {
 }
 
 #search-list {
-  /* Remove default list styling */
   list-style-type: none;
   padding: 0;
   margin: 0;
@@ -268,6 +285,7 @@ nav {
 
 #search-list li:hover {
   background-color: #eee;
+  cursor: pointer;
 }
 
 ::v-global(.p-dialog) {
