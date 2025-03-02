@@ -3,6 +3,10 @@ import NavBar from '@/components/NavBarLoggedIn.vue'
 import '@/assets/main.css'
 import { ref } from 'vue'
 import router from '@/router/index.js'
+import axios from 'axios'
+import { useTokenStore } from '@/stores/token.js'
+
+const tokenStore = useTokenStore()
 
 const numOfTasks = ref('30')
 const species = ref('Hele pensum')
@@ -12,6 +16,24 @@ const settings = ref(false)
 
 const toggleSettings = () => {
   settings.value = !settings.value
+}
+
+async function onStart() {
+  try {
+    await axios.post(
+      'http://localhost:8080/quizzes/user/' + tokenStore.getUser(),
+      {
+        nrOfTasks: parseInt(numOfTasks.value),
+        quizContent: 'HELE_PENSUM',
+        quizMode: 'STANDARD',
+        answerMode: 'SEARCH',
+      },
+      tokenStore.getAuthorizationConfig(),
+    )
+    router.push('/quiz')
+  } catch (error) {
+    console.error(error.response.data)
+  }
 }
 </script>
 
@@ -27,7 +49,7 @@ const toggleSettings = () => {
           <h3>Arter: {{ species }}</h3>
           <h3>Quizmodus: {{ quizMode }}</h3>
           <h3>Svarmodus: {{ answerMode }}</h3>
-          <button id="startquiz" @click="router.push('/quiz')">Start quiz</button>
+          <button id="startquiz" @click="onStart">Start quiz</button>
           <div id="avansert-wrapper" @click="toggleSettings">
             <v-icon name="bi-caret-down-fill" v-if="!settings" />
             <v-icon name="bi-caret-up-fill" v-if="settings" />
@@ -51,21 +73,21 @@ const toggleSettings = () => {
             <select name="species" id="species" v-model="species">
               <option value="Hele pensum">Hele pensum</option>
               <option value="Spiselige">Spiselige</option>
-              <option value="Matsopp">Matsopp</option>
+              <option value="Ikke matsopp">Ikke matsopp</option>
               <option value="Giftige">Giftige</option>
             </select>
             <label for="quiz-mode">Quizmodus:</label>
             <select name="quiz-mode" id="quiz-mode" v-model="quizMode">
-              <option value="Artsbestemmelse og normlistestatus">
+              <option selected value="Artsbestemmelse og normlistestatus">
                 Artsbestemmelse og normlistestatus
               </option>
-              <option selected="Kun artsbestemmelse">Kun artsbestemmelse</option>
+              <option value="Kun artsbestemmelse">Kun artsbestemmelse</option>
               <option value="Kun normlistestatus">Kun normlistestatus</option>
-              <option value="Forgiftningsforløp">Forgiftningsforløp</option>
+              <option disabled value="Forgiftningsforløp">Forgiftningsforløp</option>
             </select>
             <label for="answer-mode">Svarmodus:</label>
             <select name="answer-mode" id="answer-mode" v-model="answerMode">
-              <option selected="Søk og valg">Søk og valg</option>
+              <option selected value="Søk og valg">Søk og valg</option>
               <option value="Flervalg (4 alternativer)">Flervalg (4 alternativer)</option>
               <option value="Fritekst">Fritekst</option>
             </select>
