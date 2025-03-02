@@ -2,6 +2,28 @@
 import NavBar from '@/components/NavBar.vue'
 import '@/assets/main.css'
 import router from '@/router/index.js'
+import { useTokenStore } from '@/stores/token'
+import axios from 'axios'
+import { ref } from 'vue'
+
+const tokenStore = useTokenStore()
+tokenStore.getAuthorizationConfig()
+
+const email = ref(null)
+const password = ref(null)
+
+async function onSumbit() {
+  try {
+    const response = await axios.post('http://localhost:8080/login', {
+      email: email.value,
+      password: password.value,
+    })
+    tokenStore.saveInStore(email.value, response.data)
+    router.push('/start')
+  } catch (error) {
+    console.error('Login failed:', error)
+  }
+}
 </script>
 
 <template>
@@ -14,10 +36,10 @@ import router from '@/router/index.js'
         <div class="wrapper">
           <h2>Logg inn</h2>
           <label for="email">E-post:</label>
-          <input type="text" id="email" />
+          <input type="text" id="email" v-model="email" />
           <label>Passord:</label>
-          <input type="password" id="password" />
-          <button class="submit">
+          <input type="password" id="password" v-model="password" />
+          <button class="submit" @click="onSumbit">
             Logg inn
             <v-icon name="md-login-round" />
           </button>
