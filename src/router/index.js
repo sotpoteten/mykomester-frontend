@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import axios from 'axios'
+import { useTokenStore } from '@/stores/token.js'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -28,6 +30,7 @@ const router = createRouter({
       path: '/start',
       name: 'start',
       component: () => import('../views/StartView.vue'),
+      meta: { requiresAuth: true },
     },
     {
       path: '/quiz',
@@ -50,6 +53,18 @@ const router = createRouter({
       component: () => import('../views/ProfileView.vue'),
     },
   ],
+})
+
+router.beforeEach(async (to) => {
+  const tokenStore = useTokenStore()
+  try {
+    await axios.get(`http://localhost:8080/check_token`, tokenStore.getAuthorizationConfig())
+  } catch (error) {
+    if (to.name !== 'login' && to.name !== 'registrer' && to.name !== 'home') {
+      return { name: 'login' }
+    }
+    console.error(error.response.data)
+  }
 })
 
 export default router
