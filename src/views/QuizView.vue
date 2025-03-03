@@ -14,11 +14,14 @@ const photographer = ref('')
 const taskNr = ref(1)
 const first = ref(0)
 const currentTask = ref(1)
-const speciesAnswer = ref('')
-const statusAnswer = ref('')
-const noteAnswer = ref('')
+const speciesAnswer = ref(null)
+const statusAnswer = ref(null)
+const noteAnswer = ref(null)
+const quizData = ref(null)
+const nrOfTasks = ref(0)
 taskNr.value = computed(() => (first.value + 10) / 10)
 let allSpecies = []
+
 ;(async () => {
   try {
     await router.push('/quiz')
@@ -27,8 +30,9 @@ let allSpecies = []
       tokenStore.getAuthorizationConfig(),
     )
 
-    const quizData = quizResponse.data
-    tasks.value = quizData.tasks
+    quizData.value = quizResponse.data
+    nrOfTasks.value = quizData.value.nrOfTasks
+    tasks.value = quizData.value.tasks
     imgurl.value = tasks.value[taskNr.value.value - 1].pictureUrl
     photographer.value = tasks.value[taskNr.value.value - 1].photographer
   } catch (error) {
@@ -83,9 +87,21 @@ function checkOccurance(mush) {
 
 function updateTask() {
   //save answers in task array
-  tasks.value[currentTask.value - 1].answeredSpecies = speciesAnswer.value
-  tasks.value[currentTask.value - 1].answeredCategory = statusAnswer.value
-  tasks.value[currentTask.value - 1].answeredNote = noteAnswer.value
+  if (speciesAnswer.value == '') {
+    tasks.value[currentTask.value - 1].answeredSpecies = null
+  } else {
+    tasks.value[currentTask.value - 1].answeredSpecies = speciesAnswer.value
+  }
+  if (statusAnswer.value == '') {
+    tasks.value[currentTask.value - 1].answeredCategory = null
+  } else {
+    tasks.value[currentTask.value - 1].answeredCategory = statusAnswer.value
+  }
+  if (noteAnswer.value == '') {
+    tasks.value[currentTask.value - 1].answeredNote = null
+  } else {
+    tasks.value[currentTask.value - 1].answeredNote = noteAnswer.value
+  }
 
   //Get image-info for new task
   imgurl.value = tasks.value[taskNr.value.value - 1].pictureUrl
@@ -109,6 +125,21 @@ function updateTask() {
     noteAnswer.value = tasks.value[currentTask.value - 1].answeredNote
   }
 }
+
+async function onFinish() {
+  updateTask()
+  quizData.value.timeFinished = new Date()
+
+  await axios.put(
+    'http://localhost:8080/quizzes/' + quizData.value.id,
+    quizData.value,
+    tokenStore.getAuthorizationConfig(),
+  )
+
+  console.log(quizData.value)
+
+  router.push('/resultater')
+}
 </script>
 
 <template>
@@ -121,7 +152,7 @@ function updateTask() {
     <p>Denne handlingen kan ikke angres.</p>
     <div class="button-wrapper">
       <button class="submit" id="return" @click="showExitDialog = false">Tilbake</button>
-      <button class="submit" id="exit" @click="router.push('/resultater')">Avslutt</button>
+      <button class="submit" id="exit" @click="onFinish">Avslutt</button>
     </div>
   </Dialog>
   <Dialog v-model:visible="showSaveDialog" modal header="Vil du lagre?" :style="{ width: '25rem' }">
@@ -174,7 +205,7 @@ function updateTask() {
               <input
                 type="radio"
                 id="spiselig"
-                value="Spiselig"
+                value="SPISELIG"
                 name="normlist"
                 v-model="statusAnswer"
               />
@@ -184,7 +215,7 @@ function updateTask() {
               <input
                 type="radio"
                 id="spiselig-merknad"
-                value="Spiselig med merknad"
+                value="SPISELIG_MED_MERKNAD"
                 name="normlist"
                 v-model="statusAnswer"
               />
@@ -194,7 +225,7 @@ function updateTask() {
               <input
                 type="radio"
                 id="ikke-matsopp"
-                value="Ikke matsopp"
+                value="IKKE_MATSOPP"
                 name="normlist"
                 v-model="statusAnswer"
               />
@@ -204,7 +235,7 @@ function updateTask() {
               <input
                 type="radio"
                 id="giftig"
-                value="Giftig"
+                value="GIFTIG"
                 name="normlist"
                 v-model="statusAnswer"
               />
@@ -214,7 +245,7 @@ function updateTask() {
               <input
                 type="radio"
                 id="meget-giftig"
-                value="Meget giftig"
+                value="MEGET_GIFTIG"
                 name="normlist"
                 v-model="statusAnswer"
               />
@@ -240,7 +271,7 @@ function updateTask() {
           <Paginator
             v-model:first="first"
             rows="10"
-            totalRecords="300"
+            :totalRecords="nrOfTasks * 10"
             :dt="paginatorStyle"
             @click="updateTask"
           />
