@@ -10,8 +10,13 @@ import { useTokenStore } from '@/stores/token.js'
 const tokenStore = useTokenStore()
 const tasks = ref([])
 const imgurl = ref('')
+const photographer = ref('')
 const taskNr = ref(1)
 const first = ref(0)
+const currentTask = ref(1)
+const speciesAnswer = ref('')
+const statusAnswer = ref('')
+const noteAnswer = ref('')
 taskNr.value = computed(() => (first.value + 10) / 10)
 let allSpecies = []
 ;(async () => {
@@ -25,6 +30,7 @@ let allSpecies = []
     const quizData = quizResponse.data
     tasks.value = quizData.tasks
     imgurl.value = tasks.value[taskNr.value.value - 1].pictureUrl
+    photographer.value = tasks.value[taskNr.value.value - 1].photographer
   } catch (error) {
     console.error(error.response.data)
   }
@@ -67,18 +73,41 @@ const paginatorStyle = ref({
 
 const searchList = computed(() => allSpecies.filter(checkOccurance))
 
-const search = ref('')
-
-const twoTerms = computed(() => search.value.length > 1)
+const twoTerms = computed(() => speciesAnswer.value.length > 1)
 const selected = ref(false)
 
 function checkOccurance(mush) {
-  var filter = search.value.toUpperCase()
+  var filter = speciesAnswer.value.toUpperCase()
   return mush.toUpperCase().indexOf(filter) > -1
 }
 
 function updateTask() {
+  //save answers in task array
+  tasks.value[currentTask.value - 1].answeredSpecies = speciesAnswer.value
+  tasks.value[currentTask.value - 1].answeredCategory = statusAnswer.value
+  tasks.value[currentTask.value - 1].answeredNote = noteAnswer.value
+
+  //Get image-info for new task
   imgurl.value = tasks.value[taskNr.value.value - 1].pictureUrl
+  photographer.value = tasks.value[taskNr.value.value - 1].photographer
+
+  //Get saved values for answers
+  currentTask.value = taskNr.value.value
+  if (tasks.value[currentTask.value - 1].answeredSpecies == null) {
+    speciesAnswer.value = ''
+  } else {
+    speciesAnswer.value = tasks.value[currentTask.value - 1].answeredSpecies
+  }
+  if (tasks.value[currentTask.value - 1].answeredCategory == null) {
+    statusAnswer.value = ''
+  } else {
+    statusAnswer.value = tasks.value[currentTask.value - 1].answeredCategory
+  }
+  if (tasks.value[currentTask.value - 1].answeredNote == null) {
+    noteAnswer.value = ''
+  } else {
+    noteAnswer.value = tasks.value[currentTask.value - 1].answeredNote
+  }
 }
 </script>
 
@@ -110,6 +139,10 @@ function updateTask() {
         </div>
         <div id="img-wrapper">
           <img v-bind:src="imgurl" alt="Soppbilde" />
+          <div class="image-info">
+            Foto: {{ photographer }}. Gjenbruk iht.
+            <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>
+          </div>
         </div>
         <div id="container-wrapper">
           <div class="answer-container" id="species">
@@ -117,7 +150,7 @@ function updateTask() {
             <input
               type="search"
               size="30"
-              v-model="search"
+              v-model="speciesAnswer"
               @keyup="searchFilter"
               @click="selected = false"
             />
@@ -127,7 +160,7 @@ function updateTask() {
                 :key="shroom.id"
                 @click="
                   () => {
-                    search = shroom
+                    speciesAnswer = shroom
                     selected = true
                   }
                 "
@@ -138,7 +171,13 @@ function updateTask() {
           </div>
           <div class="answer-container" id="normlist">
             <div class="radio-wrapper">
-              <input type="radio" id="spiselig" value="Spiselig" name="normlist" />
+              <input
+                type="radio"
+                id="spiselig"
+                value="Spiselig"
+                name="normlist"
+                v-model="statusAnswer"
+              />
               <label for="spiselig">Spiselig</label>
             </div>
             <div class="radio-wrapper">
@@ -147,29 +186,54 @@ function updateTask() {
                 id="spiselig-merknad"
                 value="Spiselig med merknad"
                 name="normlist"
+                v-model="statusAnswer"
               />
               <label for="spiselig-merknad">Spiselig med merknad</label>
             </div>
             <div class="radio-wrapper">
-              <input type="radio" id="matsopp" value="Matsopp" name="normlist" />
-              <label for="matsopp">Matsopp</label>
+              <input
+                type="radio"
+                id="ikke-matsopp"
+                value="Ikke matsopp"
+                name="normlist"
+                v-model="statusAnswer"
+              />
+              <label for="ikke-matsopp">Ikke matsopp</label>
             </div>
             <div class="radio-wrapper">
-              <input type="radio" id="giftig" value="Giftig" name="normlist" />
+              <input
+                type="radio"
+                id="giftig"
+                value="Giftig"
+                name="normlist"
+                v-model="statusAnswer"
+              />
               <label for="giftig">Giftig</label>
             </div>
             <div class="radio-wrapper">
-              <input type="radio" id="meget-giftig" value="Meget giftig" name="normlist" />
+              <input
+                type="radio"
+                id="meget-giftig"
+                value="Meget giftig"
+                name="normlist"
+                v-model="statusAnswer"
+              />
               <label for="meget-giftig">Meget giftig</label>
             </div>
           </div>
           <div class="answer-container" id="note">
             <h2>Angi merknad:</h2>
-            <textarea name="merknad" id="merknad" cols="30" rows="4"></textarea>
+            <textarea
+              name="merknad"
+              id="merknad"
+              cols="30"
+              rows="4"
+              v-model="noteAnswer"
+            ></textarea>
           </div>
         </div>
         <div id="navigation-wrapper">
-          <button class="submit" id="save" @click="showSaveDialog = true">
+          <button class="submit" id="save" @click="showSaveDialog = true" disabled>
             <v-icon name="md-save-round" id="save-icon" />
             Lagre quiz til senere
           </button>
@@ -212,6 +276,7 @@ h1 {
   justify-content: center;
   height: 50%;
   margin-bottom: 10px;
+  position: relative;
 }
 
 img {
@@ -321,6 +386,7 @@ nav {
   color: black;
   display: block;
   font-family: Arial, Helvetica, sans-serif;
+  width: 276px;
 }
 
 #search-list li:hover {
@@ -355,5 +421,20 @@ p {
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
+}
+
+.image-info {
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: gray;
+  opacity: 0.8;
+  border-radius: inherit;
+  font-size: 10px;
+
+  a {
+    color: white;
+  }
 }
 </style>
