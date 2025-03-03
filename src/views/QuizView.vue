@@ -4,12 +4,47 @@ import Paginator from 'primevue/paginator'
 import { ref, computed } from 'vue'
 import Dialog from 'primevue/dialog'
 import router from '@/router/index.js'
+import axios from 'axios'
+import { useTokenStore } from '@/stores/token.js'
+
+const tokenStore = useTokenStore()
+const tasks = ref([])
+const imgurl = ref('')
+const taskNr = ref(1)
+const first = ref(0)
+taskNr.value = computed(() => (first.value + 10) / 10)
+let allSpecies = []
+;(async () => {
+  try {
+    await router.push('/quiz')
+    const quizResponse = await axios.get(
+      'http://localhost:8080/quizzes/user/latest/' + tokenStore.getUser(),
+      tokenStore.getAuthorizationConfig(),
+    )
+
+    const quizData = quizResponse.data
+    tasks.value = quizData.tasks
+    imgurl.value = tasks.value[taskNr.value.value - 1].pictureUrl
+  } catch (error) {
+    console.error(error.response.data)
+  }
+})()
+;(async () => {
+  try {
+    const speciesResponse = await axios.get(
+      'http://localhost:8080/species_names',
+      tokenStore.getAuthorizationConfig(),
+    )
+
+    allSpecies = speciesResponse.data
+  } catch (error) {
+    console.error(error.response.data)
+  }
+})()
 
 const showExitDialog = ref(false)
 const showSaveDialog = ref(false)
 
-const first = ref(0)
-let taskNr = computed(() => (first.value + 10) / 10)
 const paginatorStyle = ref({
   padding: '3px',
   background: '#748e54',
@@ -30,9 +65,7 @@ const paginatorStyle = ref({
   },
 })
 
-const shrooms = ['Bispelue', 'Fluesopp', 'Kantarell', 'Traktkantarell', 'Champingjog', 'Hattetatt']
-
-const searchList = computed(() => shrooms.filter(checkOccurance))
+const searchList = computed(() => allSpecies.filter(checkOccurance))
 
 const search = ref('')
 
@@ -42,6 +75,10 @@ const selected = ref(false)
 function checkOccurance(mush) {
   var filter = search.value.toUpperCase()
   return mush.toUpperCase().indexOf(filter) > -1
+}
+
+function updateTask() {
+  imgurl.value = tasks.value[taskNr.value.value - 1].pictureUrl
 }
 </script>
 
@@ -72,10 +109,7 @@ function checkOccurance(mush) {
           <h1>Oppgave {{ taskNr }}</h1>
         </div>
         <div id="img-wrapper">
-          <img
-            src="https://artsobservasjoner.no/MediaLibrary/2024/9/579a19a5-59c2-4ccb-9cb9-fb4234c2f663_image.jpg"
-            alt="Soppbilde"
-          />
+          <img v-bind:src="imgurl" alt="Soppbilde" />
         </div>
         <div id="container-wrapper">
           <div class="answer-container" id="species">
@@ -139,7 +173,13 @@ function checkOccurance(mush) {
             <v-icon name="md-save-round" id="save-icon" />
             Lagre quiz til senere
           </button>
-          <Paginator v-model:first="first" rows="10" totalRecords="300" :dt="paginatorStyle" />
+          <Paginator
+            v-model:first="first"
+            rows="10"
+            totalRecords="300"
+            :dt="paginatorStyle"
+            @click="updateTask"
+          />
           <button class="submit" id="finish" @click="showExitDialog = true">
             Avslutt quiz
             <v-icon name="bi-send-check-fill" id="finish-icon" />
