@@ -3,6 +3,50 @@ import NavBar from '@/components/NavBarLoggedIn.vue'
 import '@/assets/main.css'
 import Chart from 'primevue/chart'
 import { ref, onMounted } from 'vue'
+import axios from 'axios'
+import { useTokenStore } from '@/stores/token.js'
+
+const tokenStore = useTokenStore()
+const result = ref(null)
+const answers = ref([])
+const tenLastResults = ref([])
+const tenScores = []
+const score = ref(0)
+const maxScore = ref(0)
+const percent = ref(0)
+const wrongPercent = ref(0)
+
+;(async () => {
+  try {
+    const resultResponse = await axios.get(
+      'http://localhost:8080/quizzes/result/latest/user/' + tokenStore.getUser(),
+      tokenStore.getAuthorizationConfig(),
+    )
+    result.value = resultResponse.data
+    answers.value = result.value.answers
+    score.value = result.value.score
+    maxScore.value = result.value.maxScore
+    percent.value = (score.value / maxScore.value) * 100
+    wrongPercent.value = 100 - percent.value
+  } catch (error) {
+    console.error(error.response)
+  }
+})()
+
+;(async () => {
+  try {
+    const tenResultsResponse = await axios.get(
+      'http://localhost:8080/quizzes/result/tenlast/user/' + tokenStore.getUser(),
+      tokenStore.getAuthorizationConfig(),
+    )
+    tenLastResults.value = tenResultsResponse.data
+    for (var i = 0; i < tenLastResults.value.length; i++) {
+      tenScores.push((tenLastResults.value[i].score / tenLastResults.value[i].maxScore) * 100)
+    }
+  } catch (error) {
+    console.error(error.response)
+  }
+})()
 
 onMounted(() => {
   doughnutData.value = setDoughnutData()
@@ -16,12 +60,12 @@ const doughnutOptions = ref(null)
 
 const setDoughnutData = () => {
   return {
-    labels: ['Riktig', 'Ikke besvart', 'Feil'],
+    labels: ['Riktig%', 'Feil%'],
     datasets: [
       {
-        data: [73.3, 17.4, 13.3],
-        backgroundColor: ['#748e54', '#9c914f', '#553739'],
-        hoverBackgroundColor: ['#5d7243', '#7d743f', '#442c2e'],
+        data: [percent, wrongPercent],
+        backgroundColor: ['#748e54', '#553739'],
+        hoverBackgroundColor: ['#5d7243', '#442c2e'],
       },
     ],
   }
@@ -48,8 +92,8 @@ const setBarData = () => {
     labels: ['', '', '', '', '', '', '', '', '', ''],
     datasets: [
       {
-        label: 'Score',
-        data: [51.8, 61.0, 74.9, 61.0, 64.4, 53.6, 85.4, 76.9, 82.0, 73.0],
+        label: 'Score i %',
+        data: tenScores,
         backgroundColor: ['#748e54', '#553739', '#955e42'],
         borderColor: ['#ffffff'],
         borderWidth: 1,
@@ -94,7 +138,7 @@ const setBarOptions = () => {
         },
         title: {
           display: true,
-          text: 'Oppnådd poengsscore',
+          text: 'Oppnådd poengsscore (%)',
           color: '#00',
         },
       },
@@ -117,7 +161,7 @@ const setBarOptions = () => {
       <div class="content-box" id="left">
         <div class="title-wrapper">
           <h1 id="result">Resultater:</h1>
-          <h1 id="score">66/90 poeng - 73.3%</h1>
+          <h1 id="score">{{ score }}/{{ maxScore }} poeng - {{ percent }}%</h1>
         </div>
         <div class="table-wrapper">
           <table class="result-table">
@@ -131,215 +175,16 @@ const setBarOptions = () => {
               </tr>
             </thead>
             <tbody>
-              <tr>
+              <tr v-for="answer in answers" :key="answer">
                 <td>1</td>
-                <td style="color: green">Bispelue (Gyromitra infula)</td>
-                <td style="color: green">Spiselig med merknad</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td style="color: green">Bjørkevokssopp (Hygrophorus hedrychii)</td>
-                <td style="color: green">Spiselig med merknad</td>
-                <td>Bjørkevokssopp (Hygrophorus hedrychii)</td>
-                <td>Spiselig med merknad</td>
-              </tr>
-              <tr>
-                <td>3</td>
-                <td style="color: red">Bispelue (Gyromitra infula)</td>
-                <td style="color: green">Spiselig</td>
-                <td>Bjørkevokssopp (Hygrophorus hedrychii)</td>
-                <td>Spiselig</td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
-                <td>Bispelue (Gyromitra infula)</td>
-                <td>Spiselig med merknad</td>
+                <td :class="{ green: answer.speciesCorrect, red: !answer.speciesCorrect }">
+                  {{ answer.answeredSpecies }}
+                </td>
+                <td :class="{ green: answer.categoryCorrect, red: !answer.categoryCorrect }">
+                  {{ answer.answeredCategory }}
+                </td>
+                <td>{{ answer.correctSpecies }}</td>
+                <td>{{ answer.correctCategory }}</td>
               </tr>
             </tbody>
           </table>
@@ -452,5 +297,13 @@ h1 {
 #score {
   width: 60%;
   text-align: right;
+}
+
+.green {
+  color: green;
+}
+
+.red {
+  color: red;
 }
 </style>
