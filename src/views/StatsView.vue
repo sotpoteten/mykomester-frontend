@@ -89,7 +89,7 @@ const worstSpecies = ref([])
               <th>Prosentvis poensum</th>
             </tr>
             <tr v-for="result in tenLastResults" :key="result">
-              <td>01.02.2025</td>
+              <td>{{ result.dateFinished }}</td>
               <td>{{ result.score }} poeng</td>
               <td>{{ result.maxScore }} poeng</td>
               <td>{{ (result.score / result.maxScore) * 100 }} %</td>
