@@ -1,6 +1,52 @@
 <script setup>
 import NavBar from '@/components/NavBarLoggedIn.vue'
 import '@/assets/main.css'
+import { ref } from 'vue'
+import axios from 'axios'
+import { useTokenStore } from '@/stores/token'
+
+const tokenStore = useTokenStore()
+const stats = ref(null)
+const tenLastResults = ref([])
+const tenScores = ref([])
+const nrOfQuizzes = ref(0)
+const totalScore = ref(0)
+const totalMaxScore = ref(0)
+const percentage = ref(0)
+const bestSpecies = ref([])
+const worstSpecies = ref([])
+
+;(async () => {
+  try {
+    const statsResponse = await axios.get(
+      'http://localhost:8080/stats/user/' + tokenStore.getUser(),
+      tokenStore.getAuthorizationConfig(),
+    )
+    stats.value = statsResponse.data
+    nrOfQuizzes.value = stats.value.nrOfQuizzes
+    totalScore.value = stats.value.totalScore
+    totalMaxScore.value = stats.value.totalMaxScore
+    percentage.value = (totalScore.value / totalMaxScore.value) * 100
+    bestSpecies.value = stats.value.bestSpeciesOverall
+    worstSpecies.value = stats.value.worstSpeciesOverall
+  } catch (error) {
+    console.error(error.response)
+  }
+})()
+;(async () => {
+  try {
+    const tenResultsResponse = await axios.get(
+      'http://localhost:8080/quizzes/result/tenlast/user/' + tokenStore.getUser(),
+      tokenStore.getAuthorizationConfig(),
+    )
+    tenLastResults.value = tenResultsResponse.data
+    for (var i = 0; i < tenLastResults.value.length; i++) {
+      tenScores.value.push((tenLastResults.value[i].score / tenLastResults.value[i].maxScore) * 100)
+    }
+  } catch (error) {
+    console.error(error.response)
+  }
+})()
 </script>
 
 <template>
@@ -14,19 +60,19 @@ import '@/assets/main.css'
           <div id="stats">
             <div class="stat-wrapper">
               <h2>Gjennomførte quizer:</h2>
-              <h1>26</h1>
+              <h1>{{ nrOfQuizzes }}</h1>
             </div>
             <div class="stat-wrapper">
               <h2>Oppnådd poengssum totalt:</h2>
-              <h1>1289</h1>
+              <h1>{{ totalScore }}</h1>
             </div>
             <div class="stat-wrapper">
               <h2>Maksimal poengsum totalt:</h2>
-              <h1>2340</h1>
+              <h1>{{ totalMaxScore }}</h1>
             </div>
             <div class="stat-wrapper">
               <h2>Gjennomsnittsscore:</h2>
-              <h1>55.1%</h1>
+              <h1>{{ percentage }}%</h1>
             </div>
           </div>
           <div id="icon-wrapper">
@@ -42,65 +88,11 @@ import '@/assets/main.css'
               <th>Maksimal poengsum</th>
               <th>Prosentvis poensum</th>
             </tr>
-            <tr>
+            <tr v-for="result in tenLastResults" :key="result">
               <td>01.02.2025</td>
-              <td>66 poeng</td>
-              <td>90 poeng</td>
-              <td>73.3%</td>
-            </tr>
-            <tr>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-            </tr>
-            <tr>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-            </tr>
-            <tr>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-            </tr>
-            <tr>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-            </tr>
-            <tr>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-            </tr>
-            <tr>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-            </tr>
-            <tr>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-            </tr>
-            <tr>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-            </tr>
-            <tr>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
+              <td>{{ result.score }} poeng</td>
+              <td>{{ result.maxScore }} poeng</td>
+              <td>{{ (result.score / result.maxScore) * 100 }} %</td>
             </tr>
           </table>
         </div>
@@ -114,7 +106,7 @@ import '@/assets/main.css'
               <h3>arter:</h3>
             </div>
             <div class="dropdown-wrapper">
-              <select name="dropdown-best" id="dropdown-best">
+              <select name="dropdown-best" id="dropdown-best" disabled>
                 <option value="Totalt">Totalt</option>
                 <option value="Kun artsbestemmelse">Kun artsbestemmelse</option>
                 <option value="Kun normlistestatus">Kun normlistestatus</option>
@@ -126,45 +118,9 @@ import '@/assets/main.css'
               <th>Artsnavn</th>
               <th>Prosentvis riktig</th>
             </tr>
-            <tr>
-              <td>Bispelue (Gyromitra infula)</td>
-              <td>100%</td>
-            </tr>
-            <tr>
-              <td>-</td>
-              <td>-</td>
-            </tr>
-            <tr>
-              <td>-</td>
-              <td>-</td>
-            </tr>
-            <tr>
-              <td>-</td>
-              <td>-</td>
-            </tr>
-            <tr>
-              <td>-</td>
-              <td>-</td>
-            </tr>
-            <tr>
-              <td>-</td>
-              <td>-</td>
-            </tr>
-            <tr>
-              <td>-</td>
-              <td>-</td>
-            </tr>
-            <tr>
-              <td>-</td>
-              <td>-</td>
-            </tr>
-            <tr>
-              <td>-</td>
-              <td>-</td>
-            </tr>
-            <tr>
-              <td>-</td>
-              <td>-</td>
+            <tr v-for="species in bestSpecies" :key="species">
+              <td>{{ species.speciesName }}</td>
+              <td>{{ species.percentage }}%</td>
             </tr>
           </table>
         </div>
@@ -176,7 +132,7 @@ import '@/assets/main.css'
               <h3>arter:</h3>
             </div>
             <div class="dropdown-wrapper">
-              <select name="dropdown-worst" id="dropdown-worst">
+              <select name="dropdown-worst" id="dropdown-worst" disabled>
                 <option value="Totalt">Totalt</option>
                 <option value="Kun artsbestemmelse">Kun artsbestemmelse</option>
                 <option value="Kun normlistestatus">Kun normlistestatus</option>
@@ -188,45 +144,9 @@ import '@/assets/main.css'
               <th>Artsnavn</th>
               <th id="percent">Prosentvis riktig</th>
             </tr>
-            <tr>
-              <td>Bjørkevokssopp (Hygrophorus hedrychii)</td>
-              <td>0%</td>
-            </tr>
-            <tr>
-              <td>-</td>
-              <td>-</td>
-            </tr>
-            <tr>
-              <td>-</td>
-              <td>-</td>
-            </tr>
-            <tr>
-              <td>-</td>
-              <td>-</td>
-            </tr>
-            <tr>
-              <td>-</td>
-              <td>-</td>
-            </tr>
-            <tr>
-              <td>-</td>
-              <td>-</td>
-            </tr>
-            <tr>
-              <td>-</td>
-              <td>-</td>
-            </tr>
-            <tr>
-              <td>-</td>
-              <td>-</td>
-            </tr>
-            <tr>
-              <td>-</td>
-              <td>-</td>
-            </tr>
-            <tr>
-              <td>-</td>
-              <td>-</td>
+            <tr v-for="species in worstSpecies" :key="species">
+              <td>{{ species.speciesName }}</td>
+              <td>{{ species.percentage }}%</td>
             </tr>
           </table>
         </div>
