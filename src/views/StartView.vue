@@ -12,10 +12,29 @@ const numOfTasks = ref('30')
 const species = ref('Hele pensum')
 const quizMode = ref('Artsbestemmelse og normlistestatus')
 const answerMode = ref('Søk og valg')
-const settings = ref(false)
+const advancedSettings = ref(false)
+
+;(async () => {
+  const settingsResponse = await axios.get(
+    'http://localhost:8080/usersettings/user/' + tokenStore.getUser(),
+    tokenStore.getAuthorizationConfig(),
+  )
+  console.log(settingsResponse.data)
+  numOfTasks.value = settingsResponse.data.nrOfTasks
+  species.value = formatString(settingsResponse.data.quizContent)
+  quizMode.value = formatString(settingsResponse.data.quizMode)
+  answerMode.value = formatString(settingsResponse.data.answerMode)
+})()
+
+function formatString(input) {
+  input = String(input).toLowerCase()
+  input = String(input).replace('_', ' ')
+  input = String(input).charAt(0).toUpperCase() + String(input).slice(1)
+  return input
+}
 
 const toggleSettings = () => {
-  settings.value = !settings.value
+  advancedSettings.value = !advancedSettings.value
 }
 
 async function onStart() {
@@ -51,11 +70,11 @@ async function onStart() {
           <h3>Svarmodus: {{ answerMode }}</h3>
           <button id="startquiz" @click="onStart">Start quiz</button>
           <div id="avansert-wrapper" @click="toggleSettings">
-            <v-icon name="bi-caret-down-fill" v-if="!settings" />
-            <v-icon name="bi-caret-up-fill" v-if="settings" />
+            <v-icon name="bi-caret-down-fill" v-if="!advancedSettings" />
+            <v-icon name="bi-caret-up-fill" v-if="advancedSettings" />
             <h3>Avanserte innstillinger</h3>
           </div>
-          <div id="innstillinger-wrapper" v-if="settings">
+          <div id="innstillinger-wrapper" v-if="advancedSettings">
             <label for="nr-of-tasks">Antall oppgaver:</label>
             <div id="radio-wrapper">
               <input type="radio" id="ten" name="nr-of-tasks" v-model="numOfTasks" value="10" />
@@ -70,24 +89,22 @@ async function onStart() {
               <label for="fifty">50</label>
             </div>
             <label for="species">Sopparter:</label>
-            <select name="species" id="species" v-model="species">
+            <select name="species" id="species" v-model="species" disabled>
               <option value="Hele pensum">Hele pensum</option>
               <option value="Spiselige">Spiselige</option>
               <option value="Ikke matsopp">Ikke matsopp</option>
               <option value="Giftige">Giftige</option>
             </select>
             <label for="quiz-mode">Quizmodus:</label>
-            <select name="quiz-mode" id="quiz-mode" v-model="quizMode">
-              <option selected value="Artsbestemmelse og normlistestatus">
-                Artsbestemmelse og normlistestatus
-              </option>
+            <select name="quiz-mode" id="quiz-mode" v-model="quizMode" disabled>
+              <option selected value="Standard">Standard</option>
               <option value="Kun artsbestemmelse">Kun artsbestemmelse</option>
               <option value="Kun normlistestatus">Kun normlistestatus</option>
               <option disabled value="Forgiftningsforløp">Forgiftningsforløp</option>
             </select>
             <label for="answer-mode">Svarmodus:</label>
-            <select name="answer-mode" id="answer-mode" v-model="answerMode">
-              <option selected value="Søk og valg">Søk og valg</option>
+            <select name="answer-mode" id="answer-mode" v-model="answerMode" disabled>
+              <option selected value="Search">Søk og valg</option>
               <option value="Flervalg (4 alternativer)">Flervalg (4 alternativer)</option>
               <option value="Fritekst">Fritekst</option>
             </select>
