@@ -19,7 +19,6 @@ const advancedSettings = ref(false)
     'http://localhost:8080/usersettings/user/' + tokenStore.getUser(),
     tokenStore.getAuthorizationConfig(),
   )
-  console.log(settingsResponse.data)
   numOfTasks.value = settingsResponse.data.nrOfTasks
   species.value = formatString(settingsResponse.data.quizContent)
   quizMode.value = formatString(settingsResponse.data.quizMode)
