@@ -1,10 +1,11 @@
 <script setup>
 import NavBar from '@/components/NavBarLoggedIn.vue'
 import '@/assets/main.css'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import router from '@/router/index.js'
 import axios from 'axios'
 import { useTokenStore } from '@/stores/token.js'
+import Chart from 'primevue/chart'
 
 const tokenStore = useTokenStore()
 
@@ -13,6 +14,10 @@ const species = ref('Hele pensum')
 const quizMode = ref('Artsbestemmelse og normlistestatus')
 const answerMode = ref('Søk og valg')
 const advancedSettings = ref(false)
+const tenLastResults = ref([])
+const tenScores = []
+const firstname = ref('')
+const lastname = ref('')
 
 ;(async () => {
   const settingsResponse = await axios.get(
@@ -24,6 +29,33 @@ const advancedSettings = ref(false)
   quizMode.value = formatString(settingsResponse.data.quizMode)
   answerMode.value = formatString(settingsResponse.data.answerMode)
 })()
+;(async () => {
+  try {
+    const tenResultsResponse = await axios.get(
+      'http://localhost:8080/quizzes/result/tenlast/user/' + tokenStore.getUser(),
+      tokenStore.getAuthorizationConfig(),
+    )
+    tenLastResults.value = tenResultsResponse.data
+    for (var i = 0; i < tenLastResults.value.length; i++) {
+      tenScores.push((tenLastResults.value[i].score / tenLastResults.value[i].maxScore) * 100)
+    }
+  } catch (error) {
+    console.error(error)
+  }
+})()
+;(async () => {
+  const userResponse = await axios.get(
+    'http://localhost:8080/users/' + tokenStore.getUser(),
+    tokenStore.getAuthorizationConfig(),
+  )
+  firstname.value = userResponse.data.firstName
+  lastname.value = userResponse.data.lastName
+})()
+
+onMounted(() => {
+  barData.value = setBarData()
+  barOptions.value = setBarOptions()
+})
 
 function formatString(input) {
   input = String(input).toLowerCase()
@@ -51,6 +83,73 @@ async function onStart() {
     router.push('/quiz')
   } catch (error) {
     console.error(error.response.data)
+  }
+}
+
+const barData = ref()
+const barOptions = ref()
+
+const setBarData = () => {
+  return {
+    labels: ['', '', '', '', '', '', '', '', '', ''],
+    datasets: [
+      {
+        label: 'Score i %',
+        data: tenScores,
+        backgroundColor: ['#748e54', '#553739', '#955e42'],
+        borderColor: ['#ffffff'],
+        borderWidth: 1,
+      },
+    ],
+  }
+}
+const setBarOptions = () => {
+  return {
+    plugins: {
+      legend: {
+        labels: {
+          color: '#00',
+        },
+      },
+      title: {
+        text: 'Siste 10 quizer',
+        display: true,
+        position: 'bottom',
+        padding: {
+          bottom: 5,
+        },
+        color: '#00',
+      },
+    },
+    scales: {
+      x: {
+        ticks: {
+          color: '#00',
+        },
+        grid: {
+          color: '#00',
+        },
+      },
+      y: {
+        beginAtZero: true,
+        ticks: {
+          color: '#00',
+        },
+        grid: {
+          color: '#00',
+        },
+        title: {
+          display: true,
+          text: 'Oppnådd poengsscore (%)',
+          color: '#00',
+        },
+      },
+    },
+    aspectRatio: 3,
+    maintainAspectRatio: false,
+    layout: {
+      padding: 0,
+    },
   }
 }
 </script>
@@ -111,8 +210,19 @@ async function onStart() {
         </div>
       </div>
       <div id="right">
-        <div class="content-box" id="top"></div>
-        <div class="content-box" id="bottom"></div>
+        <div class="content-box" id="top">
+          <h1 id="welcome">Velkommen {{ firstname }} {{ lastname }}!</h1>
+          <p id="info-text">
+            Her kan du gjennomføre quizer for å forbedre din kunnskap om sopp på normlisten. Alle
+            bilder brukt i applikasjonen er hentet fra
+            <a href="https://artsobservasjoner.no">artsobservasjoner.no</a>. Husk at arten må være
+            riktig for å få poeng for riktig normlistestatus.
+          </p>
+          <h2 id="good-luck">Lykke til!</h2>
+        </div>
+        <div class="content-box" id="bottom">
+          <Chart type="bar" :data="barData" :options="barOptions" />
+        </div>
       </div>
     </div>
   </div>
@@ -139,12 +249,16 @@ async function onStart() {
 #top {
   background-color: #955e42;
   height: 50%;
+  flex-direction: column;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 #bottom {
   background-color: #9c914f;
   height: 50%;
   margin-bottom: 10px;
+  justify-content: center;
 }
 
 .wrapper {
@@ -211,5 +325,16 @@ select {
   border-radius: 5px;
   border: none;
   height: 25px;
+}
+
+#welcome {
+  font-weight: normal;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+#info-text {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
 }
 </style>
