@@ -14,7 +14,7 @@ const photographer = ref('')
 const taskNr = ref(1)
 const first = ref(0)
 const currentTask = ref(1)
-const speciesAnswer = ref(null)
+const speciesAnswer = ref('')
 const statusAnswer = ref(null)
 const noteAnswer = ref(null)
 const quizData = ref(null)
@@ -75,7 +75,14 @@ const paginatorStyle = ref({
   },
 })
 
-const searchList = computed(() => allSpecies.filter(checkOccurance))
+const searchResults = computed(() => allSpecies.filter(checkOccurance))
+const searchList = computed(() => {
+  if (searchResults.value.length > 4) {
+    return searchResults.value.slice(0, 4)
+  } else {
+    return searchResults.value
+  }
+})
 
 const twoTerms = computed(() => speciesAnswer.value.length > 1)
 const selected = ref(false)
@@ -199,6 +206,7 @@ async function onFinish() {
                 {{ shroom }}
               </li>
             </ul>
+            <p id="search-info" v-if="!(twoTerms && !selected)">Skriv inn to tegn for å søke</p>
           </div>
           <div class="answer-container" id="normlist">
             <div class="radio-wrapper">
@@ -463,9 +471,16 @@ p {
   opacity: 0.8;
   border-radius: inherit;
   font-size: 10px;
+  padding: 1px;
 
   a {
     color: white;
   }
+}
+
+#search-info {
+  margin-top: 5px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: small;
 }
 </style>

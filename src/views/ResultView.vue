@@ -32,7 +32,6 @@ const wrongPercent = ref(0)
     console.error(error.response)
   }
 })()
-
 ;(async () => {
   try {
     const tenResultsResponse = await axios.get(
@@ -150,6 +149,14 @@ const setBarOptions = () => {
     },
   }
 }
+
+function formatString(input) {
+  if (input === null) return null
+  input = String(input).toLowerCase()
+  input = String(input).replaceAll('_', ' ')
+  input = String(input).charAt(0).toUpperCase() + String(input).slice(1)
+  return input
+}
 </script>
 
 <template>
@@ -161,7 +168,9 @@ const setBarOptions = () => {
       <div class="content-box" id="left">
         <div class="title-wrapper">
           <h1 id="result">Resultater:</h1>
-          <h1 id="score">{{ score }}/{{ maxScore }} poeng - {{ percent }}%</h1>
+          <h1 id="score">
+            {{ score }}/{{ maxScore }} poeng - {{ parseFloat(percent).toFixed(2) }}%
+          </h1>
         </div>
         <div class="table-wrapper">
           <table class="result-table">
@@ -175,16 +184,16 @@ const setBarOptions = () => {
               </tr>
             </thead>
             <tbody>
-              <tr v-for="answer in answers" :key="answer">
-                <td>1</td>
+              <tr v-for="(answer, index) in answers" :key="answer">
+                <td>{{ index + 1 }}</td>
                 <td :class="{ green: answer.speciesCorrect, red: !answer.speciesCorrect }">
                   {{ answer.answeredSpecies }}
                 </td>
                 <td :class="{ green: answer.categoryCorrect, red: !answer.categoryCorrect }">
-                  {{ answer.answeredCategory }}
+                  {{ formatString(answer.answeredCategory) }}
                 </td>
                 <td>{{ answer.correctSpecies }}</td>
-                <td>{{ answer.correctCategory }}</td>
+                <td>{{ formatString(answer.correctCategory) }}</td>
               </tr>
             </tbody>
           </table>
