@@ -29,7 +29,7 @@ const wrongPercent = ref(0)
     percent.value = (score.value / maxScore.value) * 100
     wrongPercent.value = 100 - percent.value
   } catch (error) {
-    console.error(error.response)
+    console.error(error)
   }
 })()
 ;(async () => {
@@ -43,7 +43,7 @@ const wrongPercent = ref(0)
       tenScores.push((tenLastResults.value[i].score / tenLastResults.value[i].maxScore) * 100)
     }
   } catch (error) {
-    console.error(error.response)
+    console.error(error)
   }
 })()
 

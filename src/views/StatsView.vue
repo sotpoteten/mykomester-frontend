@@ -72,7 +72,7 @@ const worstSpecies = ref([])
             </div>
             <div class="stat-wrapper">
               <h2>Gjennomsnittsscore:</h2>
-              <h1>{{ percentage }}%</h1>
+              <h1>{{ parseFloat(percentage).toFixed(2) }}%</h1>
             </div>
           </div>
           <div id="icon-wrapper">
@@ -92,7 +92,7 @@ const worstSpecies = ref([])
               <td>{{ result.dateFinished }}</td>
               <td>{{ result.score }} poeng</td>
               <td>{{ result.maxScore }} poeng</td>
-              <td>{{ (result.score / result.maxScore) * 100 }} %</td>
+              <td>{{ parseFloat((result.score / result.maxScore) * 100).toFixed(2) }} %</td>
             </tr>
           </table>
         </div>
@@ -120,7 +120,7 @@ const worstSpecies = ref([])
             </tr>
             <tr v-for="species in bestSpecies" :key="species">
               <td>{{ species.speciesName }}</td>
-              <td>{{ species.percentage }}%</td>
+              <td>{{ parseFloat(species.percentage).toFixed(1) }}%</td>
             </tr>
           </table>
         </div>
@@ -146,7 +146,7 @@ const worstSpecies = ref([])
             </tr>
             <tr v-for="species in worstSpecies" :key="species">
               <td>{{ species.speciesName }}</td>
-              <td>{{ species.percentage }}%</td>
+              <td>{{ parseFloat(species.percentage).toFixed(1) }}%</td>
             </tr>
           </table>
         </div>
