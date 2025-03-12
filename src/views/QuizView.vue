@@ -147,6 +147,10 @@ async function onFinish() {
 
   router.push('/resultater')
 }
+
+function capitalizeFirstLetter(input) {
+  return String(input).charAt(0).toUpperCase() + String(input).slice(1)
+}
 </script>
 
 <template>
@@ -203,7 +207,7 @@ async function onFinish() {
                   }
                 "
               >
-                {{ shroom }}
+                {{ capitalizeFirstLetter(shroom) }}
               </li>
             </ul>
             <p id="search-info" v-if="!(twoTerms && !selected)">Skriv inn to tegn for å søke</p>

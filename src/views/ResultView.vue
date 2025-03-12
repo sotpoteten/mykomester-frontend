@@ -38,7 +38,8 @@ const wrongPercent = ref(0)
       tokenStore.getAuthorizationConfig(),
     )
     for (var i = 0; i < tenResultsResponse.data.length; i++) {
-      tenScores.value[i] = (tenResultsResponse.data[i].score / tenResultsResponse.data[i].maxScore) * 100
+      tenScores.value[i] =
+        (tenResultsResponse.data[i].score / tenResultsResponse.data[i].maxScore) * 100
     }
   } catch (error) {
     console.error(error)
@@ -155,6 +156,10 @@ function formatString(input) {
   input = String(input).charAt(0).toUpperCase() + String(input).slice(1)
   return input
 }
+
+function capitalizeFirstLetter(input) {
+  return String(input).charAt(0).toUpperCase() + String(input).slice(1)
+}
 </script>
 
 <template>
@@ -185,12 +190,12 @@ function formatString(input) {
               <tr v-for="(answer, index) in answers" :key="answer">
                 <td>{{ index + 1 }}</td>
                 <td :class="{ green: answer.speciesCorrect, red: !answer.speciesCorrect }">
-                  {{ answer.answeredSpecies }}
+                  {{ capitalizeFirstLetter(answer.answeredSpecies) }}
                 </td>
                 <td :class="{ green: answer.categoryCorrect, red: !answer.categoryCorrect }">
                   {{ formatString(answer.answeredCategory) }}
                 </td>
-                <td>{{ answer.correctSpecies }}</td>
+                <td>{{ capitalizeFirstLetter(answer.correctSpecies) }}</td>
                 <td>{{ formatString(answer.correctCategory) }}</td>
               </tr>
             </tbody>

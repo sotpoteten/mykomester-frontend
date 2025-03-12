@@ -47,6 +47,10 @@ const worstSpecies = ref([])
     console.error(error.response)
   }
 })()
+
+function capitalizeFirstLetter(input) {
+  return String(input).charAt(0).toUpperCase() + String(input).slice(1)
+}
 </script>
 
 <template>
@@ -119,7 +123,7 @@ const worstSpecies = ref([])
               <th>Prosentvis riktig</th>
             </tr>
             <tr v-for="species in bestSpecies" :key="species">
-              <td>{{ species.speciesName }}</td>
+              <td>{{ capitalizeFirstLetter(species.speciesName) }}</td>
               <td>{{ parseFloat(species.percentage).toFixed(1) }}%</td>
             </tr>
           </table>
@@ -145,7 +149,7 @@ const worstSpecies = ref([])
               <th id="percent">Prosentvis riktig</th>
             </tr>
             <tr v-for="species in worstSpecies" :key="species">
-              <td>{{ species.speciesName }}</td>
+              <td>{{ capitalizeFirstLetter(species.speciesName) }}</td>
               <td>{{ parseFloat(species.percentage).toFixed(1) }}%</td>
             </tr>
           </table>
