@@ -60,10 +60,17 @@ router.beforeEach(async (to) => {
   try {
     await axios.get(`http://localhost:8080/check_token`, tokenStore.getAuthorizationConfig())
   } catch (error) {
-    if (to.name !== 'login' && to.name !== 'registrer' && to.name !== 'home') {
+    if (
+      to.name !== 'login' &&
+      to.name !== 'registrer' &&
+      to.name !== 'home' &&
+      to.name !== 'glemtpassord' &&
+      error.response &&
+      error.response.status === 401
+    ) {
+      console.error('Unauthorized!')
       return { name: 'login' }
     }
-    console.error(error.response.data)
   }
 })
 

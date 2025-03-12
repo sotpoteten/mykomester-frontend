@@ -4,9 +4,12 @@ import '@/assets/main.css'
 import { ref } from 'vue'
 import router from '@/router/index.js'
 import Dialog from 'primevue/dialog'
+import axios from 'axios'
 
 const email = ref('')
 const visible = ref(false)
+const isError = ref(false)
+const message = ref('')
 const dialogStyle = ref({
   content: {
     padding: {
@@ -19,6 +22,24 @@ const dialogStyle = ref({
     },
   },
 })
+
+async function onSubmit() {
+  isError.value = false
+  try {
+    await axios.post('http://localhost:8080/glemt_passord', email.value, {
+      headers: {
+        'Content-Type': 'text/plain',
+      },
+    })
+    visible.value = true
+  } catch (error) {
+    console.log(error)
+    if (error.status == 404) {
+      isError.value = true
+      message.value = 'Finner ingen bruker med e-post ' + email.value
+    }
+  }
+}
 </script>
 
 <template>
@@ -29,7 +50,7 @@ const dialogStyle = ref({
     header="Bekreftelse"
     :style="{ width: '25rem' }"
   >
-    <p>
+    <p v-if="!isError">
       Nytt passord er sendt på e-post til {{ email }}. Sjekk spam-filter om du ikke finner e-posten
     </p>
     <button class="submit" id="back-to-login" @click="router.push('/login')">
@@ -47,9 +68,12 @@ const dialogStyle = ref({
           <label for="username">E-post:</label>
           <input type="text" id="username" v-model="email" />
           <div class="btn-wrapper">
-            <button class="submit" id="exit">Avbryt</button>
-            <button class="submit" @click="visible = true">Tilbakestill passord</button>
+            <button class="submit" id="exit" @click="router.push('/login')">Avbryt</button>
+            <button class="submit" @click="onSubmit">Tilbakestill passord</button>
           </div>
+          <p v-if="isError">
+            {{ message }}
+          </p>
         </div>
       </div>
     </div>
@@ -91,6 +115,7 @@ const dialogStyle = ref({
 
 p {
   margin-top: 0;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 #back-to-login {
