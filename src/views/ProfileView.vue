@@ -196,22 +196,22 @@ function onLogout() {
               <input type="radio" id="fifty" name="nr-of-tasks" value="50" v-model="nrOfTasks" />
               <label for="fifty">50</label>
             </div>
-            <label for="species">Sopparter:</label>
-            <select name="species" id="species" v-model="species" disabled>
+            <label for="species" v-if="false">Sopparter:</label>
+            <select name="species" id="species" v-model="species" v-if="false">
               <option value="Hele pensum">Hele pensum</option>
               <option value="Spiselige">Spiselige</option>
               <option value="Matsopp">Matsopp</option>
               <option value="Giftige">Giftige</option>
             </select>
-            <label for="quiz-mode">Quizmodus:</label>
-            <select name="quiz-mode" id="quiz-mode" v-model="quizMode" disabled>
+            <label for="quiz-mode" v-if="false">Quizmodus:</label>
+            <select name="quiz-mode" id="quiz-mode" v-model="quizMode" v-if="false">
               <option value="Standard">Standard</option>
               <option selected="Kun artsbestemmelse">Kun artsbestemmelse</option>
               <option value="Kun normlistestatus">Kun normlistestatus</option>
               <option value="Forgiftningsforløp">Forgiftningsforløp</option>
             </select>
-            <label for="answer-mode">Svarmodus:</label>
-            <select name="answer-mode" id="answer-mode" v-model="answerMode" disabled>
+            <label for="answer-mode" v-if="false">Svarmodus:</label>
+            <select name="answer-mode" id="answer-mode" v-model="answerMode" v-if="false">
               <option value="Search">Søk og valg</option>
               <option value="Flervalg (4 alternativer)">Flervalg (4 alternativer)</option>
               <option value="Fritekst">Fritekst</option>

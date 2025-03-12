@@ -110,7 +110,7 @@ function capitalizeFirstLetter(input) {
               <h3>arter:</h3>
             </div>
             <div class="dropdown-wrapper">
-              <select name="dropdown-best" id="dropdown-best" disabled>
+              <select name="dropdown-best" id="dropdown-best" v-if="false">
                 <option value="Totalt">Totalt</option>
                 <option value="Kun artsbestemmelse">Kun artsbestemmelse</option>
                 <option value="Kun normlistestatus">Kun normlistestatus</option>
@@ -136,7 +136,7 @@ function capitalizeFirstLetter(input) {
               <h3>arter:</h3>
             </div>
             <div class="dropdown-wrapper">
-              <select name="dropdown-worst" id="dropdown-worst" disabled>
+              <select name="dropdown-worst" id="dropdown-worst" v-if="false">
                 <option value="Totalt">Totalt</option>
                 <option value="Kun artsbestemmelse">Kun artsbestemmelse</option>
                 <option value="Kun normlistestatus">Kun normlistestatus</option>
