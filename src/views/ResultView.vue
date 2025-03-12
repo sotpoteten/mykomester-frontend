@@ -9,8 +9,7 @@ import { useTokenStore } from '@/stores/token.js'
 const tokenStore = useTokenStore()
 const result = ref(null)
 const answers = ref([])
-const tenLastResults = ref([])
-const tenScores = []
+const tenScores = ref([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
 const score = ref(0)
 const maxScore = ref(0)
 const percent = ref(0)
@@ -38,9 +37,8 @@ const wrongPercent = ref(0)
       'http://localhost:8080/quizzes/result/tenlast/user/' + tokenStore.getUser(),
       tokenStore.getAuthorizationConfig(),
     )
-    tenLastResults.value = tenResultsResponse.data
-    for (var i = 0; i < tenLastResults.value.length; i++) {
-      tenScores.push((tenLastResults.value[i].score / tenLastResults.value[i].maxScore) * 100)
+    for (var i = 0; i < tenResultsResponse.data.length; i++) {
+      tenScores.value[i] = (tenResultsResponse.data[i].score / tenResultsResponse.data[i].maxScore) * 100
     }
   } catch (error) {
     console.error(error)
