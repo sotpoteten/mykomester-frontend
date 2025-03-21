@@ -6,6 +6,7 @@ import axios from 'axios'
 import { useTokenStore } from '@/stores/token.js'
 import Dialog from 'primevue/dialog'
 import router from '@/router/index.js'
+import { ip } from '@/utils/httputils.js'
 
 const tokenStore = useTokenStore()
 
@@ -22,7 +23,7 @@ const answerMode = ref('')
 ;(async () => {
   try {
     const userResponse = await axios.get(
-      'http://localhost:8080/users/' + tokenStore.getUser(),
+      `http://${ip}:8080/users/` + tokenStore.getUser(),
       tokenStore.getAuthorizationConfig(),
     )
     firstname.value = userResponse.data.firstName
@@ -35,7 +36,7 @@ const answerMode = ref('')
 ;(async () => {
   try {
     const settingsResponse = await axios.get(
-      'http://localhost:8080/usersettings/user/' + tokenStore.getUser(),
+      `http://${ip}:8080/usersettings/user/` + tokenStore.getUser(),
       tokenStore.getAuthorizationConfig(),
     )
     nrOfTasks.value = settingsResponse.data.nrOfTasks
@@ -80,7 +81,7 @@ async function onSaveUserSettings() {
     if (password.value !== '') {
       if (password.value == confirmPassword.value) {
         await axios.put(
-          'http://localhost:8080/users/' + tokenStore.getUser(),
+          `http://${ip}:8080/users/` + tokenStore.getUser(),
           {
             firstName: firstname.value,
             lastName: lastname.value,
@@ -94,7 +95,7 @@ async function onSaveUserSettings() {
       }
     } else {
       await axios.put(
-        'http://localhost:8080/users/' + tokenStore.getUser(),
+        `http://${ip}:8080/users/` + tokenStore.getUser(),
         {
           firstName: firstname.value,
           lastName: lastname.value,
@@ -114,7 +115,7 @@ async function onSaveUserSettings() {
 async function onSaveQuizSettings() {
   try {
     await axios.put(
-      'http://localhost:8080/usersettings/user/' + tokenStore.getUser(),
+      `http://${ip}:8080/usersettings/user/` + tokenStore.getUser(),
       {
         nrOfTasks: nrOfTasks.value,
         quizContent: reverseFormatString(species.value),

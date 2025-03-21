@@ -5,6 +5,7 @@ import router from '@/router/index.js'
 import { useTokenStore } from '@/stores/token'
 import axios from 'axios'
 import { ref } from 'vue'
+import { ip } from '@/utils/httputils.js'
 
 const tokenStore = useTokenStore()
 tokenStore.getAuthorizationConfig()
@@ -14,7 +15,7 @@ const password = ref(null)
 
 async function onSumbit() {
   try {
-    const response = await axios.post('http://localhost:8080/login', {
+    const response = await axios.post(`http://${ip}:8080/login`, {
       email: email.value,
       password: password.value,
     })

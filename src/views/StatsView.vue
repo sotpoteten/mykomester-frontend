@@ -4,6 +4,7 @@ import '@/assets/main.css'
 import { ref } from 'vue'
 import axios from 'axios'
 import { useTokenStore } from '@/stores/token'
+import { ip } from '@/utils/httputils.js'
 
 const tokenStore = useTokenStore()
 const stats = ref(null)
@@ -19,7 +20,7 @@ const worstSpecies = ref([])
 ;(async () => {
   try {
     const statsResponse = await axios.get(
-      'http://localhost:8080/stats/user/' + tokenStore.getUser(),
+      `http://${ip}:8080/stats/user/` + tokenStore.getUser(),
       tokenStore.getAuthorizationConfig(),
     )
     stats.value = statsResponse.data
@@ -36,7 +37,7 @@ const worstSpecies = ref([])
 ;(async () => {
   try {
     const tenResultsResponse = await axios.get(
-      'http://localhost:8080/quizzes/result/tenlast/user/' + tokenStore.getUser(),
+      `http://${ip}:8080/quizzes/result/tenlast/user/` + tokenStore.getUser(),
       tokenStore.getAuthorizationConfig(),
     )
     tenLastResults.value = tenResultsResponse.data

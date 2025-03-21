@@ -5,6 +5,7 @@ import { ref } from 'vue'
 import axios from 'axios'
 import { useTokenStore } from '@/stores/token.js'
 import router from '@/router/index.js'
+import { ip } from '@/utils/httputils.js'
 
 const firstname = ref('')
 const lastname = ref('')
@@ -16,14 +17,14 @@ tokenStore.getAuthorizationConfig()
 
 async function onSubmit() {
   try {
-    await axios.post('http://localhost:8080/users', {
+    await axios.post(`http://${ip}:8080/users`, {
       firstName: firstname.value,
       lastName: lastname.value,
       email: email.value,
       password: password.value,
     })
 
-    const loginResponse = await axios.post('http://localhost:8080/login', {
+    const loginResponse = await axios.post(`http://${ip}:8080/login`, {
       email: email.value,
       password: password.value,
     })

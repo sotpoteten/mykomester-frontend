@@ -5,6 +5,7 @@ import { ref } from 'vue'
 import router from '@/router/index.js'
 import Dialog from 'primevue/dialog'
 import axios from 'axios'
+import { ip } from '@/utils/httputils.js'
 
 const email = ref('')
 const visible = ref(false)
@@ -26,7 +27,7 @@ const dialogStyle = ref({
 async function onSubmit() {
   isError.value = false
   try {
-    await axios.post('http://localhost:8080/glemt_passord', email.value, {
+    await axios.post(`http://${ip}:8080/glemt_passord`, email.value, {
       headers: {
         'Content-Type': 'text/plain',
       },

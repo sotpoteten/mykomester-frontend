@@ -5,6 +5,7 @@ import Chart from 'primevue/chart'
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import { useTokenStore } from '@/stores/token.js'
+import { ip } from '@/utils/httputils.js'
 
 const tokenStore = useTokenStore()
 const result = ref(null)
@@ -18,7 +19,7 @@ const wrongPercent = ref(0)
 ;(async () => {
   try {
     const resultResponse = await axios.get(
-      'http://localhost:8080/quizzes/result/latest/user/' + tokenStore.getUser(),
+      `http://${ip}:8080/quizzes/result/latest/user/` + tokenStore.getUser(),
       tokenStore.getAuthorizationConfig(),
     )
     result.value = resultResponse.data
@@ -34,7 +35,7 @@ const wrongPercent = ref(0)
 ;(async () => {
   try {
     const tenResultsResponse = await axios.get(
-      'http://localhost:8080/quizzes/result/tenlast/user/' + tokenStore.getUser(),
+      `http://${ip}:8080/quizzes/result/tenlast/user/` + tokenStore.getUser(),
       tokenStore.getAuthorizationConfig(),
     )
     for (var i = 0; i < tenResultsResponse.data.length; i++) {

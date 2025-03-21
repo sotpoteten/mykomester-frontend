@@ -6,6 +6,7 @@ import Dialog from 'primevue/dialog'
 import router from '@/router/index.js'
 import axios from 'axios'
 import { useTokenStore } from '@/stores/token.js'
+import { ip } from '@/utils/httputils.js'
 
 const tokenStore = useTokenStore()
 const tasks = ref([])
@@ -26,7 +27,7 @@ let allSpecies = []
   try {
     await router.push('/quiz')
     const quizResponse = await axios.get(
-      'http://localhost:8080/quizzes/user/latest/' + tokenStore.getUser(),
+      `http://${ip}:8080/quizzes/user/latest/` + tokenStore.getUser(),
       tokenStore.getAuthorizationConfig(),
     )
 
@@ -42,7 +43,7 @@ let allSpecies = []
 ;(async () => {
   try {
     const speciesResponse = await axios.get(
-      'http://localhost:8080/species_names',
+      `http://${ip}:8080/species_names`,
       tokenStore.getAuthorizationConfig(),
     )
 

@@ -6,6 +6,7 @@ import router from '@/router/index.js'
 import axios from 'axios'
 import { useTokenStore } from '@/stores/token.js'
 import Chart from 'primevue/chart'
+import { ip } from '@/utils/httputils.js'
 
 const tokenStore = useTokenStore()
 
@@ -20,7 +21,7 @@ const lastname = ref('')
 
 ;(async () => {
   const settingsResponse = await axios.get(
-    'http://localhost:8080/usersettings/user/' + tokenStore.getUser(),
+    `http://${ip}:8080/usersettings/user/` + tokenStore.getUser(),
     tokenStore.getAuthorizationConfig(),
   )
   numOfTasks.value = settingsResponse.data.nrOfTasks
@@ -31,7 +32,7 @@ const lastname = ref('')
 ;(async () => {
   try {
     const tenResultsResponse = await axios.get(
-      'http://localhost:8080/quizzes/result/tenlast/user/' + tokenStore.getUser(),
+      `http://${ip}:8080/quizzes/result/tenlast/user/` + tokenStore.getUser(),
       tokenStore.getAuthorizationConfig(),
     )
     for (var i = 0; i < tenResultsResponse.data.length; i++) {
@@ -44,7 +45,7 @@ const lastname = ref('')
 })()
 ;(async () => {
   const userResponse = await axios.get(
-    'http://localhost:8080/users/' + tokenStore.getUser(),
+    `http://${ip}:8080/users/` + tokenStore.getUser(),
     tokenStore.getAuthorizationConfig(),
   )
   firstname.value = userResponse.data.firstName
@@ -70,7 +71,7 @@ const toggleSettings = () => {
 async function onStart() {
   try {
     await axios.post(
-      'http://localhost:8080/quizzes/user/' + tokenStore.getUser(),
+      `http://${ip}:8080/quizzes/user/` + tokenStore.getUser(),
       {
         nrOfTasks: parseInt(numOfTasks.value),
         quizContent: 'HELE_PENSUM',
