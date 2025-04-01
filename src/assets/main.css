@@ -1,35 +1,103 @@
-@import './base.css';
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
 
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+button:hover {
+  cursor: pointer;
+}
+
+.flex-container {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  position: absolute;
+  overflow-x: hidden;
+  background-color: #dcdcdc;
+}
+
+.header {
+  order: 1;
+}
+
+.main {
+  order: 2;
+  height: -webkit-fill-available;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+}
+
+.menubutton {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin: 10px 20px 10px 20px;
+  height: 100%;
+  border: none;
+  background-color: #748e54;
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  font-size: 25px;
+  font-weight: lighter;
+  color: white;
+
+  h3 {
+    font-weight: normal;
+    margin: 0px 10px;
+  }
+}
+
+h2,
+h3 {
   font-weight: normal;
 }
 
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-  padding: 3px;
+.menubutton:hover {
+  text-decoration: underline;
 }
 
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
+.content-box {
+  display: flex;
+  margin: 10px 10px 0px 0px;
+  border-radius: 10px;
+  box-shadow: 3px 3px 3px rgb(117, 117, 117);
 }
 
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
+input {
+  font-size: 15px;
+  border-radius: 5px;
+  border: none;
+  height: 25px;
+}
 
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
+label {
+  margin: 10px 0px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.submit {
+  margin: 10px 0px;
+  border: none;
+  border-radius: 5px;
+  background-color: #748e54;
+  width: 100%;
+  height: 30px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 2px 2px 2px black;
+}
+
+.submit:hover {
+  box-shadow: 3px 3px 3px black;
+  border: 1px solid black;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
 }
