@@ -16,7 +16,8 @@ const score = ref(0)
 const maxScore = ref(0)
 const percent = ref(0)
 const wrongPercent = ref(0)
-let pops = []
+let imgPops = []
+let notePops = []
 
 ;(async () => {
   try {
@@ -31,7 +32,8 @@ let pops = []
     percent.value = (score.value / maxScore.value) * 100
     wrongPercent.value = 100 - percent.value
     for (let i = 0; i < answers.value.length; i++) {
-      pops.push(ref())
+      imgPops.push(ref())
+      notePops.push(ref())
     }
   } catch (error) {
     console.error(error)
@@ -167,20 +169,26 @@ function capitalizeFirstLetter(input) {
   return String(input).charAt(0).toUpperCase() + String(input).slice(1)
 }
 
-const toggle = (event) => {
-  console.log(pops)
+const toggleImg = (event) => {
+  imgPops[event.srcElement.parentElement.id].value[0].toggle(event)
+}
 
-  pops[event.srcElement.parentElement.id].value[0].toggle(event)
+const toggleNote = (event) => {
+  notePops[event.srcElement.parentElement.id].value[0].toggle(event)
 }
 </script>
 
 <template>
-  <Popover v-for="(answer, index) in answers" :key="answer" :ref="pops[index]">
+  <Popover v-for="(answer, index) in answers" :key="answer" :ref="imgPops[index]">
     <img :src="answer.pictureUrl" alt="bilde" class="popover-img" />
     <p class="img-info">
       Foto: {{ answer.photographer }}. Gjenbruk iht.
       <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>
     </p>
+  </Popover>
+  <Popover v-for="(answer, index) in answers" :key="answer" :ref="notePops[index]">
+      <p class="note"><b>Din merknad:</b> {{ answer.answeredNote }}</p>
+      <p class="note"><b>Riktig merknad:</b> {{ answer.correctNote }}</p>
   </Popover>
   <div class="flex-container">
     <div class="header">
@@ -202,6 +210,7 @@ const toggle = (event) => {
                 <th></th>
                 <th>Ditt svar</th>
                 <th></th>
+                <th></th>
                 <th>Fasit</th>
                 <th></th>
               </tr>
@@ -209,7 +218,7 @@ const toggle = (event) => {
             <tbody>
               <tr v-for="(answer, index) in answers" :key="answer">
                 <td>{{ index + 1 }}</td>
-                <td @click="toggle" :id="index">
+                <td @click="toggleImg" :id="index">
                   <v-icon name="bi-image-fill" :id="index" />
                 </td>
                 <td :class="{ green: answer.speciesCorrect, red: !answer.speciesCorrect }">
@@ -217,6 +226,9 @@ const toggle = (event) => {
                 </td>
                 <td :class="{ green: answer.categoryCorrect, red: !answer.categoryCorrect }">
                   {{ formatString(answer.answeredCategory) }}
+                </td>
+                <td @click="toggleNote" :id="index">
+                  <v-icon name="md-note-round" :id="index" />
                 </td>
                 <td>{{ capitalizeFirstLetter(answer.correctSpecies) }}</td>
                 <td>{{ formatString(answer.correctCategory) }}</td>
@@ -350,5 +362,10 @@ h1 {
   font-size: x-small;
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.note {
+  font-family: Arial, Helvetica, sans-serif;
+  width: 20vw;
 }
 </style>
