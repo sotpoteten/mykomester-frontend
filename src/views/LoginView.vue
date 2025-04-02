@@ -13,7 +13,7 @@ tokenStore.getAuthorizationConfig()
 const email = ref(null)
 const password = ref(null)
 
-async function onSumbit() {
+async function onSubmit() {
   try {
     const response = await axios.post(`http://${ip}:8080/login`, {
       email: email.value,
@@ -39,8 +39,8 @@ async function onSumbit() {
           <label for="email">E-post:</label>
           <input type="text" id="email" v-model="email" />
           <label>Passord:</label>
-          <input type="password" id="password" v-model="password" />
-          <button class="submit" @click="onSumbit">
+          <input type="password" id="password" v-model="password" @keyup.enter="onSubmit" />
+          <button class="submit" @click="onSubmit">
             Logg inn
             <v-icon name="md-login-round" />
           </button>

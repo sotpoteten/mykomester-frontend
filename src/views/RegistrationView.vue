@@ -52,7 +52,7 @@ async function onSubmit() {
           <label for="email">*E-post:</label>
           <input type="text" id="email" v-model="email" />
           <label for="password">*Passord:</label>
-          <input type="password" id="password" v-model="password" />
+          <input type="password" id="password" v-model="password" @keyup.enter="onSubmit"/>
           <button class="submit" @click="onSubmit">Registrer deg</button>
           <p>Felter merket med * må fylles ut.</p>
         </div>
