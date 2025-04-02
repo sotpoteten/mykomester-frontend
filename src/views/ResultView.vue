@@ -6,6 +6,7 @@ import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import { useTokenStore } from '@/stores/token.js'
 import { ip } from '@/utils/httputils.js'
+import Popover from 'primevue/popover'
 
 const tokenStore = useTokenStore()
 const result = ref(null)
@@ -15,6 +16,7 @@ const score = ref(0)
 const maxScore = ref(0)
 const percent = ref(0)
 const wrongPercent = ref(0)
+let pops = []
 
 ;(async () => {
   try {
@@ -28,6 +30,9 @@ const wrongPercent = ref(0)
     maxScore.value = result.value.maxScore
     percent.value = (score.value / maxScore.value) * 100
     wrongPercent.value = 100 - percent.value
+    for (let i = 0; i < answers.value.length; i++) {
+      pops.push(ref())
+    }
   } catch (error) {
     console.error(error)
   }
@@ -161,9 +166,22 @@ function formatString(input) {
 function capitalizeFirstLetter(input) {
   return String(input).charAt(0).toUpperCase() + String(input).slice(1)
 }
+
+const toggle = (event) => {
+  console.log(pops)
+
+  pops[event.srcElement.parentElement.id].value[0].toggle(event)
+}
 </script>
 
 <template>
+  <Popover v-for="(answer, index) in answers" :key="answer" :ref="pops[index]">
+    <img :src="answer.pictureUrl" alt="bilde" class="popover-img" />
+    <p class="img-info">
+      Foto: {{ answer.photographer }}. Gjenbruk iht.
+      <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>
+    </p>
+  </Popover>
   <div class="flex-container">
     <div class="header">
       <NavBar></NavBar>
@@ -181,6 +199,7 @@ function capitalizeFirstLetter(input) {
             <thead>
               <tr>
                 <th>Nr</th>
+                <th></th>
                 <th>Ditt svar</th>
                 <th></th>
                 <th>Fasit</th>
@@ -190,6 +209,9 @@ function capitalizeFirstLetter(input) {
             <tbody>
               <tr v-for="(answer, index) in answers" :key="answer">
                 <td>{{ index + 1 }}</td>
+                <td @click="toggle" :id="index">
+                  <v-icon name="bi-image-fill" :id="index" />
+                </td>
                 <td :class="{ green: answer.speciesCorrect, red: !answer.speciesCorrect }">
                   {{ capitalizeFirstLetter(answer.answeredSpecies) }}
                 </td>
@@ -318,5 +340,15 @@ h1 {
 
 .red {
   color: red;
+}
+
+.popover-img {
+  height: 40vh;
+}
+
+.img-info {
+  font-size: x-small;
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
 }
 </style>
