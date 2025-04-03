@@ -7,6 +7,7 @@ import router from '@/router/index.js'
 import axios from 'axios'
 import { useTokenStore } from '@/stores/token.js'
 import { ip } from '@/utils/httputils.js'
+import { onKeyStroke } from '@vueuse/core'
 
 const tokenStore = useTokenStore()
 const tasks = ref([])
@@ -36,6 +37,22 @@ let allSpecies = []
     tasks.value = quizData.value.tasks
     imgurl.value = tasks.value[taskNr.value.value - 1].pictureUrl
     photographer.value = tasks.value[taskNr.value.value - 1].photographer
+
+    if (tasks.value[0].answeredSpecies == null) {
+      speciesAnswer.value = ''
+    } else {
+      speciesAnswer.value = tasks.value[0].answeredSpecies
+    }
+    if (tasks.value[0].answeredCategory == null) {
+      statusAnswer.value = ''
+    } else {
+      statusAnswer.value = tasks.value[0].answeredCategory
+    }
+    if (tasks.value[0].answeredNote == null) {
+      noteAnswer.value = ''
+    } else {
+      noteAnswer.value = tasks.value[0].answeredNote
+    }
   } catch (error) {
     console.error(error.response.data)
   }
@@ -86,7 +103,7 @@ const searchList = computed(() => {
 })
 
 const twoTerms = computed(() => speciesAnswer.value.length > 1)
-const selected = ref(false)
+const selected = ref(true)
 
 function checkOccurance(mush) {
   var filter = speciesAnswer.value.toUpperCase()
@@ -132,6 +149,8 @@ function updateTask() {
   } else {
     noteAnswer.value = tasks.value[currentTask.value - 1].answeredNote
   }
+
+  selected.value = true
 }
 
 async function onFinish() {
@@ -152,6 +171,55 @@ async function onFinish() {
 function capitalizeFirstLetter(input) {
   return String(input).charAt(0).toUpperCase() + String(input).slice(1)
 }
+
+const selectedIndex = ref(-1)
+
+const scrollListDown = (event) => {
+  event.preventDefault
+  if (selectedIndex.value == -1 || selectedIndex.value == 3) selectedIndex.value = 0
+  else selectedIndex.value++
+}
+
+const scrollListUp = (event) => {
+  event.preventDefault
+  if (selectedIndex.value == -1 || selectedIndex.value == 0) selectedIndex.value = 3
+  else selectedIndex.value--
+}
+
+const selectByEnter = (event) => {
+  event.preventDefault
+  speciesAnswer.value = searchList.value[selectedIndex.value]
+  selected.value = true
+}
+
+onKeyStroke(['PageUp'], (e) => {
+  if (e.key === 'PageUp') {
+    e.preventDefault()
+  }
+  if (first.value == nrOfTasks.value * 10 - 10) {
+    return
+  }
+  first.value += 10
+  updateTask()
+})
+
+onKeyStroke(['PageDown'], (e) => {
+  if (e.key === 'PageDown') {
+    e.preventDefault()
+  }
+  if (first.value == 0) {
+    return
+  }
+  first.value -= 10
+  updateTask()
+})
+
+onKeyStroke(['End'], (e) => {
+  if (e.key === 'End') {
+    e.preventDefault()
+  }
+  showExitDialog.value = true
+})
 </script>
 
 <template>
@@ -196,10 +264,15 @@ function capitalizeFirstLetter(input) {
               v-model="speciesAnswer"
               @keyup="searchFilter"
               @click="selected = false"
+              @keydown.down="scrollListDown"
+              @keydown.up="scrollListUp"
+              @keydown.enter="selectByEnter"
+              @keydown.backspace="selected = false"
+              ref="speciesField"
             />
             <ul id="search-list" v-if="twoTerms && !selected">
               <li
-                v-for="shroom in searchList"
+                v-for="(shroom, index) in searchList"
                 :key="shroom.id"
                 @click="
                   () => {
@@ -207,6 +280,7 @@ function capitalizeFirstLetter(input) {
                     selected = true
                   }
                 "
+                :class="{ selected: selectedIndex == index }"
               >
                 {{ capitalizeFirstLetter(shroom) }}
               </li>
@@ -434,7 +508,7 @@ nav {
 }
 
 #search-list li:hover {
-  background-color: #eee;
+  background-color: #ddd;
   cursor: pointer;
 }
 
@@ -487,5 +561,11 @@ p {
   margin-top: 5px;
   font-family: Arial, Helvetica, sans-serif;
   font-size: small;
+}
+
+#search-list {
+  .selected {
+    background-color: #ddd;
+  }
 }
 </style>
