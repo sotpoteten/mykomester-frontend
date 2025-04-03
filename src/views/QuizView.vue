@@ -8,6 +8,7 @@ import axios from 'axios'
 import { useTokenStore } from '@/stores/token.js'
 import { ip } from '@/utils/httputils.js'
 import { onKeyStroke } from '@vueuse/core'
+import Popover from 'primevue/popover'
 
 const tokenStore = useTokenStore()
 const tasks = ref([])
@@ -220,6 +221,12 @@ onKeyStroke(['End'], (e) => {
   }
   showExitDialog.value = true
 })
+
+const tips = ref()
+
+const toggleTips = (event) => {
+  tips.value.toggle(event)
+}
 </script>
 
 <template>
@@ -242,17 +249,36 @@ onKeyStroke(['End'], (e) => {
       <button class="submit" id="exit" @click="router.push('/start')">Avslutt</button>
     </div>
   </Dialog>
+  <Popover ref="tips">
+    <div class="tips">
+      <h4>Bruk tastatursnarveier for enkel navigasjon:</h4>
+      <p><b>TAB</b> for å gå til neste input-felt</p>
+      <p><b>SHIFT</b>+<b>TAB</b> for å gå tilbake</p>
+      <p><b>OPP</b> & <b>NED</b> for å bla mellom normlistestatuser</p>
+      <p><b>PAGEUP</b> for å gå til neste oppgave</p>
+      <p><b>PAGEDOWN</b> for å gå til forrige oppgave</p>
+      <p><b>END</b> for å avslutte quizzen</p>
+    </div>
+  </Popover>
   <div class="flex-container">
     <div class="main">
       <div class="content-box" id="center">
         <div id="header-wrapper">
-          <h1>Oppgave {{ taskNr }}</h1>
+          <div class="tips-icon" style="visibility: hidden">
+            <v-icon name="md-tipsandupdates" scale="2" />
+          </div>
+          <div>
+            <h1>Oppgave {{ taskNr }}</h1>
+          </div>
+          <div class="tips-icon" @mouseenter="toggleTips" @mouseleave="toggleTips">
+            <v-icon name="md-tipsandupdates" scale="2" />
+          </div>
         </div>
         <div id="img-wrapper">
           <img v-bind:src="imgurl" alt="Soppbilde" />
           <div class="image-info">
             Foto: {{ photographer }}. Gjenbruk iht.
-            <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>
+            <a href="https://creativecommons.org/licenses/by/4.0/" tabindex="-1">CC BY 4.0</a>
           </div>
         </div>
         <div id="container-wrapper">
@@ -387,6 +413,13 @@ onKeyStroke(['End'], (e) => {
 h1 {
   font-weight: normal;
   margin: 10px;
+}
+
+#header-wrapper {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-between;
 }
 
 #img-wrapper {
@@ -566,6 +599,19 @@ p {
 #search-list {
   .selected {
     background-color: #ddd;
+  }
+}
+
+.tips-icon {
+  margin: 10px;
+}
+
+.tips {
+  font-family: Arial, Helvetica, sans-serif;
+  display: block;
+
+  h4 {
+    margin-top: 5px;
   }
 }
 </style>
