@@ -83,7 +83,7 @@ import '@/assets/main.css'
               Applikasjonen er utviklet i forbindelse med en bacheloroppgave ved NTNU våren 2025
             </li>
             <li>
-              Er du interessert i å bidra med videreutviling? Ta kontakt
+              Er du interessert i å bidra med videreutvikling? Ta kontakt
               <a href="mailto:isakjons0408@gmail.com">her</a>.
             </li>
           </ul>
