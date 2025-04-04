@@ -25,7 +25,6 @@ let notePops = []
       `http://${ip}:8080/quizzes/result/latest/user/` + tokenStore.getUser(),
       tokenStore.getAuthorizationConfig(),
     )
-    console.log(resultResponse.data);
 
     result.value = resultResponse.data
     answers.value = result.value.answers
@@ -190,8 +189,8 @@ const toggleNote = (event) => {
     </p>
   </Popover>
   <Popover v-for="(answer, index) in answers" :key="answer" :ref="notePops[index]">
-      <p class="note"><b>Din merknad:</b> {{ answer.answeredNote }}</p>
-      <p class="note"><b>Riktig merknad:</b> {{ answer.correctNote }}</p>
+    <p class="note"><b>Din merknad:</b> {{ answer.answeredNote }}</p>
+    <p class="note"><b>Riktig merknad:</b> {{ answer.correctNote }}</p>
   </Popover>
   <div class="flex-container">
     <div class="header">
@@ -221,7 +220,7 @@ const toggleNote = (event) => {
             <tbody>
               <tr v-for="(answer, index) in answers" :key="answer">
                 <td>{{ index + 1 }}</td>
-                <td @click="toggleImg" :id="index">
+                <td @click="toggleImg" :id="index" class="clickable">
                   <v-icon name="bi-image-fill" :id="index" />
                 </td>
                 <td :class="{ green: answer.speciesCorrect, red: !answer.speciesCorrect }">
@@ -230,7 +229,7 @@ const toggleNote = (event) => {
                 <td :class="{ green: answer.categoryCorrect, red: !answer.categoryCorrect }">
                   {{ formatString(answer.answeredCategory) }}
                 </td>
-                <td @click="toggleNote" :id="index">
+                <td @click="toggleNote" :id="index" class="clickable">
                   <v-icon name="md-note-round" :id="index" />
                 </td>
                 <td>{{ capitalizeFirstLetter(answer.correctSpecies) }}</td>
@@ -370,5 +369,9 @@ h1 {
 .note {
   font-family: Arial, Helvetica, sans-serif;
   width: 20vw;
+}
+
+.clickable:hover {
+  cursor: pointer;
 }
 </style>
