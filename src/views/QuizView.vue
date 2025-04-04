@@ -229,6 +229,8 @@ const tips = ref()
 const toggleTips = (event) => {
   tips.value.toggle(event)
 }
+
+const hideInfo = ref(false)
 </script>
 
 <template>
@@ -253,6 +255,7 @@ const toggleTips = (event) => {
   </Dialog>
   <Popover ref="tips">
     <div class="tips">
+      <h4>Hold musen over bildet for å zoome.</h4>
       <h4>Bruk tastatursnarveier for enkel navigasjon:</h4>
       <p><b>TAB</b> for å gå til neste input-felt</p>
       <p><b>SHIFT</b>+<b>TAB</b> for å gå tilbake til forrige input-felt</p>
@@ -277,8 +280,13 @@ const toggleTips = (event) => {
           </div>
         </div>
         <div id="img-wrapper">
-          <img v-bind:src="imgurl" alt="Soppbilde" />
-          <div class="image-info">
+          <img
+            v-bind:src="imgurl"
+            alt="Soppbilde"
+            @mouseenter="hideInfo = true"
+            @mouseleave="hideInfo = false"
+          />
+          <div class="image-info" ref="imgInfo" :class="{ hidden: hideInfo }">
             Foto: {{ photographer }}. Gjenbruk iht.
             <a href="https://creativecommons.org/licenses/by/4.0/" tabindex="-1">CC BY 4.0</a>
           </div>
@@ -437,6 +445,15 @@ img {
   height: 100%;
   border-radius: 10px;
   box-shadow: 2px 2px 2px black;
+}
+
+img:hover {
+  height: 97vh;
+  position: fixed;
+  top: 10px;
+  margin-bottom: 10px;
+  cursor: zoom-in;
+  z-index: 3;
 }
 
 #container-wrapper {
@@ -615,5 +632,9 @@ p {
   h4 {
     margin-top: 5px;
   }
+}
+
+.hidden {
+  visibility: hidden;
 }
 </style>
