@@ -387,6 +387,7 @@ const hideInfo = ref(false)
               cols="30"
               rows="4"
               v-model="noteAnswer"
+              :disabled="statusAnswer != 'SPISELIG_MED_MERKNAD'"
             ></textarea>
           </div>
         </div>
