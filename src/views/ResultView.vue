@@ -25,6 +25,8 @@ let notePops = []
       `http://${ip}:8080/quizzes/result/latest/user/` + tokenStore.getUser(),
       tokenStore.getAuthorizationConfig(),
     )
+    console.log(resultResponse.data);
+
     result.value = resultResponse.data
     answers.value = result.value.answers
     score.value = result.value.score
@@ -166,7 +168,8 @@ function formatString(input) {
 }
 
 function capitalizeFirstLetter(input) {
-  return String(input).charAt(0).toUpperCase() + String(input).slice(1)
+  if (input == null) return ''
+  else return String(input).charAt(0).toUpperCase() + String(input).slice(1)
 }
 
 const toggleImg = (event) => {
