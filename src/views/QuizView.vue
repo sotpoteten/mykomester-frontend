@@ -41,8 +41,10 @@ let allSpecies = []
 
     if (tasks.value[0].answeredSpecies == null) {
       speciesAnswer.value = ''
+      selected.value = false
     } else {
       speciesAnswer.value = tasks.value[0].answeredSpecies
+      selected.value = true
     }
     if (tasks.value[0].answeredCategory == null) {
       statusAnswer.value = ''
@@ -137,8 +139,10 @@ function updateTask() {
   currentTask.value = taskNr.value.value
   if (tasks.value[currentTask.value - 1].answeredSpecies == null) {
     speciesAnswer.value = ''
+    selected.value = false
   } else {
     speciesAnswer.value = tasks.value[currentTask.value - 1].answeredSpecies
+    selected.value = true
   }
   if (tasks.value[currentTask.value - 1].answeredCategory == null) {
     statusAnswer.value = ''
@@ -152,7 +156,7 @@ function updateTask() {
   }
 
   speciesField.value.focus()
-  selected.value = true
+  selectedIndex.value = -1
 }
 
 async function onFinish() {
