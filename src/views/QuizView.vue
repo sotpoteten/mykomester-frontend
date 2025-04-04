@@ -151,6 +151,7 @@ function updateTask() {
     noteAnswer.value = tasks.value[currentTask.value - 1].answeredNote
   }
 
+  speciesField.value.focus()
   selected.value = true
 }
 
@@ -174,6 +175,7 @@ function capitalizeFirstLetter(input) {
 }
 
 const selectedIndex = ref(-1)
+const speciesField = ref()
 
 const scrollListDown = (event) => {
   event.preventDefault
@@ -253,7 +255,7 @@ const toggleTips = (event) => {
     <div class="tips">
       <h4>Bruk tastatursnarveier for enkel navigasjon:</h4>
       <p><b>TAB</b> for å gå til neste input-felt</p>
-      <p><b>SHIFT</b>+<b>TAB</b> for å gå tilbake</p>
+      <p><b>SHIFT</b>+<b>TAB</b> for å gå tilbake til forrige input-felt</p>
       <p><b>OPP</b> & <b>NED</b> for å bla mellom normlistestatuser</p>
       <p><b>PAGEUP</b> for å gå til neste oppgave</p>
       <p><b>PAGEDOWN</b> for å gå til forrige oppgave</p>
