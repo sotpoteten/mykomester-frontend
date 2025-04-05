@@ -79,6 +79,7 @@ const showSaveDialog = ref(false)
 const paginatorStyle = ref({
   padding: '3px',
   background: '#748e54',
+  gap: '10',
   nav: {
     button: {
       color: '#000000',
@@ -90,8 +91,11 @@ const paginatorStyle = ref({
         background: '#353f27',
         color: '#ffffff',
       },
-      width: '24px',
+      width: '40px',
       height: '24px',
+      border: {
+        radius: '5px',
+      },
     },
   },
 })
@@ -402,7 +406,10 @@ const hideInfo = ref(false)
             :totalRecords="nrOfTasks * 10"
             :dt="paginatorStyle"
             @click="updateTask"
-          />
+          >
+            <template #previcon> Forrige oppgave </template>
+            <template #nexticon> Neste oppgave </template>
+          </Paginator>
           <button class="submit" id="finish" @click="showExitDialog = true">
             Avslutt quiz
             <v-icon name="bi-send-check-fill" id="finish-icon" />
@@ -571,6 +578,16 @@ nav {
 
 ::v-global(.p-dialog) {
   font-family: Arial, Helvetica, sans-serif;
+}
+
+::v-global(.p-paginator-page), ::v-global(.p-paginator-next), ::v-global(.p-paginator-prev), ::v-global(.p-paginator-last), ::v-global(.p-paginator-first) {
+  margin: 3px !important;
+}
+
+::v-global(.p-paginator-next), ::v-global(.p-paginator-prev) {
+  padding-left: 5px !important;
+  padding-right: 5px !important;
+  font-weight: bold;
 }
 
 p {
