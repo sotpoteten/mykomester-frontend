@@ -64,6 +64,12 @@ function formatString(input) {
   return input
 }
 
+function reverseFormatString(input) {
+  input = String(input).toUpperCase()
+  input = String(input).replace('_', ' ')
+  return input
+}
+
 const toggleSettings = () => {
   advancedSettings.value = !advancedSettings.value
 }
@@ -74,7 +80,7 @@ async function onStart() {
       `http://${ip}:8080/quizzes/user/` + tokenStore.getUser(),
       {
         nrOfTasks: parseInt(numOfTasks.value),
-        quizContent: 'HELE_PENSUM',
+        quizContent: reverseFormatString(species.value),
         quizMode: 'STANDARD',
         answerMode: 'SEARCH',
       },
@@ -186,8 +192,8 @@ const setBarOptions = () => {
               <input type="radio" id="fifty" name="nr-of-tasks" v-model="numOfTasks" value="50" />
               <label for="fifty">50</label>
             </div>
-            <label for="species" v-if="false">Sopparter:</label>
-            <select name="species" id="species" v-model="species" v-if="false">
+            <label for="species">Sopparter:</label>
+            <select name="species" id="species" v-model="species">
               <option value="Hele pensum">Hele pensum</option>
               <option value="Spiselige">Spiselige</option>
               <option value="Ikke matsopp">Ikke matsopp</option>
