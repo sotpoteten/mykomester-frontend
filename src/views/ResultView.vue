@@ -16,6 +16,7 @@ const score = ref(0)
 const maxScore = ref(0)
 const percent = ref(0)
 const wrongPercent = ref(0)
+const quizMode = ref('')
 let imgPops = []
 let notePops = []
 
@@ -32,6 +33,7 @@ let notePops = []
     maxScore.value = result.value.maxScore
     percent.value = (score.value / maxScore.value) * 100
     wrongPercent.value = 100 - percent.value
+    quizMode.value = result.value.quizMode
     for (let i = 0; i < answers.value.length; i++) {
       imgPops.push(ref())
       notePops.push(ref())
@@ -211,10 +213,10 @@ const toggleNote = (event) => {
                 <th>Nr</th>
                 <th></th>
                 <th>Ditt svar</th>
-                <th></th>
-                <th></th>
+                <th v-if="quizMode == 'STANDARD'"></th>
+                <th v-if="quizMode == 'STANDARD' || quizMode == 'NORMLISTESTATUS'"></th>
                 <th>Fasit</th>
-                <th></th>
+                <th v-if="quizMode == 'STANDARD'"></th>
               </tr>
             </thead>
             <tbody>
@@ -223,17 +225,17 @@ const toggleNote = (event) => {
                 <td @click="toggleImg" :id="index" class="clickable">
                   <v-icon name="bi-image-fill" :id="index" />
                 </td>
-                <td :class="{ green: answer.speciesCorrect, red: !answer.speciesCorrect }">
+                <td :class="{ green: answer.speciesCorrect, red: !answer.speciesCorrect }" v-if="quizMode == 'STANDARD' || quizMode == 'ARTSBESTEMMELSE'">
                   {{ capitalizeFirstLetter(answer.answeredSpecies) }}
                 </td>
-                <td :class="{ green: answer.categoryCorrect, red: !answer.categoryCorrect }">
+                <td :class="{ green: answer.categoryCorrect, red: !answer.categoryCorrect }" v-if="quizMode == 'STANDARD' || quizMode == 'NORMLISTESTATUS'">
                   {{ formatString(answer.answeredCategory) }}
                 </td>
-                <td @click="toggleNote" :id="index" class="clickable">
+                <td @click="toggleNote" :id="index" class="clickable" v-if="quizMode == 'STANDARD' || quizMode == 'NORMLISTESTATUS'">
                   <v-icon name="md-note-round" :id="index" />
                 </td>
-                <td>{{ capitalizeFirstLetter(answer.correctSpecies) }}</td>
-                <td>{{ formatString(answer.correctCategory) }}</td>
+                <td v-if="quizMode == 'STANDARD' || quizMode == 'ARTSBESTEMMELSE'">{{ capitalizeFirstLetter(answer.correctSpecies) }}</td>
+                <td v-if="quizMode == 'STANDARD' || quizMode == 'NORMLISTESTATUS'">{{ formatString(answer.correctCategory) }}</td>
               </tr>
             </tbody>
           </table>
