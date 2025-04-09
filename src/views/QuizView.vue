@@ -22,6 +22,9 @@ const statusAnswer = ref(null)
 const noteAnswer = ref(null)
 const quizData = ref(null)
 const nrOfTasks = ref(0)
+const onlySpecies = ref(false)
+const onlyNormlist = ref(false)
+const speciesName = ref('')
 taskNr.value = computed(() => (first.value + 10) / 10)
 let allSpecies = []
 
@@ -38,6 +41,10 @@ let allSpecies = []
     tasks.value = quizData.value.tasks
     imgurl.value = tasks.value[taskNr.value.value - 1].pictureUrl
     photographer.value = tasks.value[taskNr.value.value - 1].photographer
+    speciesName.value = tasks.value[taskNr.value.value - 1].speciesName
+
+    if (quizData.value.quizMode == "ARTSBESTEMMELSE") onlySpecies.value = true
+    else if (quizData.value.quizMode == "NORMLISTESTATUS") onlyNormlist.value = true
 
     if (tasks.value[0].answeredSpecies == null) {
       speciesAnswer.value = ''
@@ -55,6 +62,10 @@ let allSpecies = []
       noteAnswer.value = ''
     } else {
       noteAnswer.value = tasks.value[0].answeredNote
+    }
+
+    if (!onlyNormlist.value) {
+      speciesField.value.focus()
     }
   } catch (error) {
     console.error(error.response.data)
@@ -138,6 +149,7 @@ function updateTask() {
   //Get image-info for new task
   imgurl.value = tasks.value[taskNr.value.value - 1].pictureUrl
   photographer.value = tasks.value[taskNr.value.value - 1].photographer
+  speciesName.value = tasks.value[taskNr.value.value - 1].speciesName
 
   //Get saved values for answers
   currentTask.value = taskNr.value.value
@@ -159,8 +171,10 @@ function updateTask() {
     noteAnswer.value = tasks.value[currentTask.value - 1].answeredNote
   }
 
-  speciesField.value.focus()
-  selectedIndex.value = -1
+  if (!onlyNormlist.value) {
+    speciesField.value.focus()
+    selectedIndex.value = -1
+  }
 }
 
 async function onFinish() {
@@ -172,8 +186,6 @@ async function onFinish() {
     quizData.value,
     tokenStore.getAuthorizationConfig(),
   )
-
-  console.log(quizData.value)
 
   router.push('/resultater')
 }
@@ -280,8 +292,9 @@ const hideInfo = ref(false)
           <div class="tips-icon" style="visibility: hidden">
             <v-icon name="md-tipsandupdates" scale="2" />
           </div>
-          <div>
+          <div id="header">
             <h1>Oppgave {{ taskNr }}</h1>
+            <h1 v-if="onlyNormlist">: {{ capitalizeFirstLetter(speciesName) }}</h1>
           </div>
           <div class="tips-icon" @mouseenter="toggleTips" @mouseleave="toggleTips">
             <v-icon name="md-tipsandupdates" scale="2" />
@@ -300,7 +313,7 @@ const hideInfo = ref(false)
           </div>
         </div>
         <div id="container-wrapper">
-          <div class="answer-container" id="species">
+          <div class="answer-container" id="species" v-if="!onlyNormlist">
             <h2>Velg soppart:</h2>
             <input
               type="search"
@@ -331,7 +344,7 @@ const hideInfo = ref(false)
             </ul>
             <p id="search-info" v-if="!(twoTerms && !selected)">Skriv inn to tegn for å søke</p>
           </div>
-          <div class="answer-container" id="normlist">
+          <div class="answer-container" id="normlist" v-if="!onlySpecies">
             <div class="radio-wrapper">
               <input
                 type="radio"
@@ -383,7 +396,7 @@ const hideInfo = ref(false)
               <label for="meget-giftig">Meget giftig</label>
             </div>
           </div>
-          <div class="answer-container" id="note">
+          <div class="answer-container" id="note" v-if="!onlySpecies">
             <h2>Angi merknad:</h2>
             <textarea
               name="merknad"
@@ -434,7 +447,7 @@ const hideInfo = ref(false)
 
 h1 {
   font-weight: normal;
-  margin: 10px;
+  margin: 10px 0px 10px 0px;
 }
 
 #header-wrapper {
@@ -658,5 +671,10 @@ p {
 
 .hidden {
   visibility: hidden;
+}
+
+#header {
+  display: flex;
+  flex-direction: row;
 }
 </style>

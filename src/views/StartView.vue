@@ -12,7 +12,7 @@ const tokenStore = useTokenStore()
 
 const numOfTasks = ref('30')
 const species = ref('Hele pensum')
-const quizMode = ref('Artsbestemmelse og normlistestatus')
+const quizMode = ref('Standard')
 const answerMode = ref('Søk og valg')
 const advancedSettings = ref(false)
 const tenScores = ref([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
@@ -66,7 +66,7 @@ function formatString(input) {
 
 function reverseFormatString(input) {
   input = String(input).toUpperCase()
-  input = String(input).replace('_', ' ')
+  input = String(input).replace(' ', '_')
   return input
 }
 
@@ -81,7 +81,7 @@ async function onStart() {
       {
         nrOfTasks: parseInt(numOfTasks.value),
         quizContent: reverseFormatString(species.value),
-        quizMode: 'STANDARD',
+        quizMode: reverseFormatString(quizMode.value),
         answerMode: 'SEARCH',
       },
       tokenStore.getAuthorizationConfig(),
@@ -199,11 +199,11 @@ const setBarOptions = () => {
               <option value="Ikke matsopp">Ikke matsopp</option>
               <option value="Giftige">Giftige</option>
             </select>
-            <label for="quiz-mode" v-if="false">Quizmodus:</label>
-            <select name="quiz-mode" id="quiz-mode" v-model="quizMode" v-if="false">
+            <label for="quiz-mode">Quizmodus:</label>
+            <select name="quiz-mode" id="quiz-mode" v-model="quizMode">
               <option selected value="Standard">Standard</option>
-              <option value="Kun artsbestemmelse">Kun artsbestemmelse</option>
-              <option value="Kun normlistestatus">Kun normlistestatus</option>
+              <option value="Artsbestemmelse">Artsbestemmelse</option>
+              <option value="Normlistestatus">Normlistestatus</option>
               <option disabled value="Forgiftningsforløp">Forgiftningsforløp</option>
             </select>
             <label for="answer-mode" v-if="false">Svarmodus:</label>
