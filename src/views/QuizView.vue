@@ -182,7 +182,7 @@ async function onFinish() {
   quizData.value.timeFinished = new Date()
 
   await axios.put(
-    'http://localhost:8080/quizzes/' + quizData.value.id,
+    `http://${ip}:8080/quizzes/` + quizData.value.id,
     quizData.value,
     tokenStore.getAuthorizationConfig(),
   )
