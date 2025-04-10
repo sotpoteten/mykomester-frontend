@@ -216,7 +216,7 @@ const toggleNote = (event) => {
                 <th v-if="quizMode == 'STANDARD'"></th>
                 <th v-if="quizMode == 'STANDARD' || quizMode == 'NORMLISTESTATUS'"></th>
                 <th>Fasit</th>
-                <th v-if="quizMode == 'STANDARD'"></th>
+                <th v-if="quizMode == 'STANDARD' || quizMode == 'NORMLISTESTATUS'"></th>
               </tr>
             </thead>
             <tbody>
@@ -234,7 +234,7 @@ const toggleNote = (event) => {
                 <td @click="toggleNote" :id="index" class="clickable" v-if="quizMode == 'STANDARD' || quizMode == 'NORMLISTESTATUS'">
                   <v-icon name="md-note-round" :id="index" />
                 </td>
-                <td v-if="quizMode == 'STANDARD' || quizMode == 'ARTSBESTEMMELSE'">{{ capitalizeFirstLetter(answer.correctSpecies) }}</td>
+                <td>{{ capitalizeFirstLetter(answer.correctSpecies) }}</td>
                 <td v-if="quizMode == 'STANDARD' || quizMode == 'NORMLISTESTATUS'">{{ formatString(answer.correctCategory) }}</td>
               </tr>
             </tbody>
