@@ -19,6 +19,7 @@ const tenScores = ref([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
 const firstname = ref('')
 const lastname = ref('')
 const specials = ref('')
+const nrOfSpecies = ref(0)
 
 ;(async () => {
   const settingsResponse = await axios.get(
@@ -51,6 +52,13 @@ const specials = ref('')
   )
   firstname.value = userResponse.data.firstName
   lastname.value = userResponse.data.lastName
+})()
+;(async () => {
+  const nrOfSpeciesResponse = await axios.get(
+    `http://${ip}:8080/stats/nrofspecies/user/` + tokenStore.getUser(),
+    tokenStore.getAuthorizationConfig(),
+  )
+  nrOfSpecies.value = nrOfSpeciesResponse.data
 })()
 
 onMounted(() => {
@@ -231,7 +239,7 @@ const updateRefs = () => {
             <label for="specials">Velg en spesialquiz:</label>
             <select name="specials" id="specials" v-model="specials" @change="updateRefs">
               <option value=""></option>
-              <option value="Dine dårligste arter">Dine dårligste arter</option>
+              <option value="Dine dårligste arter" :disabled="nrOfSpecies < 50">Dine dårligste arter</option>
               <option value="Alle pensumarter">Alle pensumarter</option>
             </select>
           </div>
