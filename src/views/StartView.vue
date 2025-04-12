@@ -18,6 +18,7 @@ const advancedSettings = ref(false)
 const tenScores = ref([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
 const firstname = ref('')
 const lastname = ref('')
+const specials = ref('')
 
 ;(async () => {
   const settingsResponse = await axios.get(
@@ -77,7 +78,7 @@ const toggleSettings = () => {
 async function onStart() {
   try {
     await axios.post(
-      `http://${ip}:8080/quizzes/user/` + tokenStore.getUser(),
+      `http://${ip}:8080/quizzes/user/` + tokenStore.getUser() + '/' + specials.value,
       {
         nrOfTasks: parseInt(numOfTasks.value),
         quizContent: reverseFormatString(species.value),
@@ -158,6 +159,15 @@ const setBarOptions = () => {
     },
   }
 }
+
+const updateRefs = () => {
+  species.value = 'Hele pensum'
+  if (specials.value == "Alle pensumarter") {
+    numOfTasks.value = 148
+  } else if (specials.value == "") {
+    numOfTasks.value = 30
+  }
+}
 </script>
 
 <template>
@@ -169,9 +179,10 @@ const setBarOptions = () => {
       <div class="content-box" id="left">
         <div class="wrapper">
           <h3>Antall oppgaver: {{ numOfTasks }}</h3>
-          <h3>Arter: {{ species }}</h3>
+          <h3 v-if="specials == ''">Arter: {{ species }}</h3>
           <h3>Quizmodus: {{ quizMode }}</h3>
-          <h3>Svarmodus: {{ answerMode }}</h3>
+          <h3 v-if="false">Svarmodus: {{ answerMode }}</h3>
+          <h3 v-if="specials != ''">Spesialquiz: {{ specials }}</h3>
           <button id="startquiz" @click="onStart">Start quiz</button>
           <div id="avansert-wrapper" @click="toggleSettings">
             <v-icon name="bi-caret-down-fill" v-if="!advancedSettings" />
@@ -181,19 +192,24 @@ const setBarOptions = () => {
           <div id="innstillinger-wrapper" v-if="advancedSettings">
             <label for="nr-of-tasks">Antall oppgaver:</label>
             <div id="radio-wrapper">
-              <input type="radio" id="ten" name="nr-of-tasks" v-model="numOfTasks" value="10" />
+              <input type="radio" id="ten" name="nr-of-tasks" v-model="numOfTasks" value="10" :disabled="specials == 'Alle pensumarter'"/>
               <label for="ten">10</label>
-              <input type="radio" id="twenty" name="nr-of-tasks" v-model="numOfTasks" value="20" />
+              <input type="radio" id="twenty" name="nr-of-tasks" v-model="numOfTasks" value="20" :disabled="specials == 'Alle pensumarter'"/>
               <label for="twenty">20</label>
-              <input type="radio" id="thirty" name="nr-of-tasks" v-model="numOfTasks" value="30" />
+              <input type="radio" id="thirty" name="nr-of-tasks" v-model="numOfTasks" value="30" :disabled="specials == 'Alle pensumarter'"/>
               <label for="thirty">30</label>
-              <input type="radio" id="fourty" name="nr-of-tasks" v-model="numOfTasks" value="40" />
+              <input type="radio" id="fourty" name="nr-of-tasks" v-model="numOfTasks" value="40" :disabled="specials == 'Alle pensumarter'"/>
               <label for="fourty">40</label>
-              <input type="radio" id="fifty" name="nr-of-tasks" v-model="numOfTasks" value="50" />
+              <input type="radio" id="fifty" name="nr-of-tasks" v-model="numOfTasks" value="50" :disabled="specials == 'Alle pensumarter'"/>
               <label for="fifty">50</label>
             </div>
             <label for="species">Sopparter:</label>
-            <select name="species" id="species" v-model="species">
+            <select
+              name="species"
+              id="species"
+              v-model="species"
+              :disabled="specials != ''"
+            >
               <option value="Hele pensum">Hele pensum</option>
               <option value="Spiselige">Spiselige</option>
               <option value="Ikke matsopp">Ikke matsopp</option>
@@ -211,6 +227,12 @@ const setBarOptions = () => {
               <option selected value="Search">Søk og valg</option>
               <option value="Flervalg (4 alternativer)">Flervalg (4 alternativer)</option>
               <option value="Fritekst">Fritekst</option>
+            </select>
+            <label for="specials">Velg en spesialquiz:</label>
+            <select name="specials" id="specials" v-model="specials" @change="updateRefs">
+              <option value=""></option>
+              <option value="Dine dårligste arter">Dine dårligste arter</option>
+              <option value="Alle pensumarter">Alle pensumarter</option>
             </select>
           </div>
         </div>
