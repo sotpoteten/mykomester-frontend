@@ -297,7 +297,7 @@ onKeyStroke(['j'], (e) => {
 })
 
 onKeyStroke(['Tab'], (e) => {
-  if (selected.value == false && statusAnswer.value != '') return
+  if (selected.value == false || statusAnswer.value != '') return
   if (e.key === 'Tab') {
     e.preventDefault()
   }
@@ -311,7 +311,7 @@ const toggleTips = (event) => {
   tips.value.toggle(event)
 }
 
-const hideInfo = ref(false)
+const zoomImg = ref(false)
 </script>
 
 <template>
@@ -336,11 +336,13 @@ const hideInfo = ref(false)
   </Dialog>
   <Popover ref="tips">
     <div class="tips">
-      <h4>Hold musen over bildet for å zoome.</h4>
+      <h4>Klikk på bildet for å zoome.</h4>
       <h4>Bruk tastatursnarveier for enkel navigasjon:</h4>
       <p><b>TAB</b> for å gå til neste input-felt</p>
       <p><b>SHIFT</b>+<b>TAB</b> for å gå tilbake til forrige input-felt</p>
-      <p><b>OPP</b> eller <b>J</b> & <b>NED</b> eller <b>K</b> for å bla mellom normlistestatuser</p>
+      <p>
+        <b>OPP</b> eller <b>J</b> & <b>NED</b> eller <b>K</b> for å bla mellom normlistestatuser
+      </p>
       <p><b>PAGEDOWN</b> eller <b>L</b> for å gå til neste oppgave</p>
       <p><b>PAGEUP</b> eller <b>H</b> for å gå til forrige oppgave</p>
       <p><b>END</b> for å avslutte quizzen</p>
@@ -362,13 +364,15 @@ const hideInfo = ref(false)
           </div>
         </div>
         <div id="img-wrapper">
+          <img v-bind:src="imgurl" alt="Soppbilde" @click="zoomImg = !zoomImg" id="smallImg" :class="{ hidden: zoomImg }"/>
           <img
             v-bind:src="imgurl"
-            alt="Soppbilde"
-            @mouseenter="hideInfo = true"
-            @mouseleave="hideInfo = false"
+            alt="Soppbilde_stort"
+            @click="zoomImg = !zoomImg"
+            id="imgZoom"
+            v-if="zoomImg"
           />
-          <div class="image-info" ref="imgInfo" :class="{ hidden: hideInfo }">
+          <div class="image-info" ref="imgInfo" :class="{ hidden: zoomImg }">
             Foto: {{ photographer }}. Gjenbruk iht.
             <a href="https://creativecommons.org/licenses/by/4.0/" tabindex="-1">CC BY 4.0</a>
           </div>
@@ -481,7 +485,7 @@ const hideInfo = ref(false)
           </button>
           <Paginator
             v-model:first="first"
-            rows="10"
+            :rows="10"
             :totalRecords="nrOfTasks * 10"
             :dt="paginatorStyle"
             @click="updateTask"
@@ -539,12 +543,19 @@ img {
 }
 
 img:hover {
+  cursor: zoom-in;
+}
+
+#imgZoom {
   height: 97vh;
   position: fixed;
   top: 10px;
   margin-bottom: 10px;
-  cursor: zoom-in;
   z-index: 3;
+}
+
+#imgZoom:hover {
+  cursor: zoom-out;
 }
 
 #container-wrapper {
