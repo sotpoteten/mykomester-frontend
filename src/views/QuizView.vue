@@ -27,6 +27,8 @@ const onlyNormlist = ref(false)
 const speciesName = ref('')
 taskNr.value = computed(() => (first.value + 10) / 10)
 let allSpecies = []
+const radioRefs = ref([])
+const radioFocus = ref(0)
 
 ;(async () => {
   try {
@@ -43,8 +45,8 @@ let allSpecies = []
     photographer.value = tasks.value[taskNr.value.value - 1].photographer
     speciesName.value = tasks.value[taskNr.value.value - 1].speciesName
 
-    if (quizData.value.quizMode == "ARTSBESTEMMELSE") onlySpecies.value = true
-    else if (quizData.value.quizMode == "NORMLISTESTATUS") onlyNormlist.value = true
+    if (quizData.value.quizMode == 'ARTSBESTEMMELSE') onlySpecies.value = true
+    else if (quizData.value.quizMode == 'NORMLISTESTATUS') onlyNormlist.value = true
 
     if (tasks.value[0].answeredSpecies == null) {
       speciesAnswer.value = ''
@@ -66,6 +68,10 @@ let allSpecies = []
 
     if (!onlyNormlist.value) {
       speciesField.value.focus()
+    }
+
+    for (let i = 0; i < 5; i++) {
+      radioRefs.value.push(ref())
     }
   } catch (error) {
     console.error(error.response.data)
@@ -215,8 +221,8 @@ const selectByEnter = (event) => {
   selected.value = true
 }
 
-onKeyStroke(['PageUp'], (e) => {
-  if (e.key === 'PageUp') {
+onKeyStroke(['PageDown'], (e) => {
+  if (e.key === 'PageDown') {
     e.preventDefault()
   }
   if (first.value == nrOfTasks.value * 10 - 10) {
@@ -226,8 +232,32 @@ onKeyStroke(['PageUp'], (e) => {
   updateTask()
 })
 
-onKeyStroke(['PageDown'], (e) => {
-  if (e.key === 'PageDown') {
+onKeyStroke(['l'], (e) => {
+  if (selected.value == false) return
+  if (e.key === 'l') {
+    e.preventDefault()
+  }
+  if (first.value == nrOfTasks.value * 10 - 10) {
+    return
+  }
+  first.value += 10
+  updateTask()
+})
+
+onKeyStroke(['PageUp'], (e) => {
+  if (e.key === 'PageUp') {
+    e.preventDefault()
+  }
+  if (first.value == 0) {
+    return
+  }
+  first.value -= 10
+  updateTask()
+})
+
+onKeyStroke(['h'], (e) => {
+  if (selected.value == false) return
+  if (e.key === 'h') {
     e.preventDefault()
   }
   if (first.value == 0) {
@@ -242,6 +272,37 @@ onKeyStroke(['End'], (e) => {
     e.preventDefault()
   }
   showExitDialog.value = true
+})
+
+onKeyStroke(['k'], (e) => {
+  if (selected.value == false) return
+  if (e.key === 'k') {
+    e.preventDefault()
+  }
+  if (radioFocus.value == 4) radioFocus.value = 0
+  else radioFocus.value++
+  radioRefs.value[radioFocus.value].value.focus()
+  statusAnswer.value = radioRefs.value[radioFocus.value].value.value
+})
+
+onKeyStroke(['j'], (e) => {
+  if (selected.value == false) return
+  if (e.key === 'j') {
+    e.preventDefault()
+  }
+  if (radioFocus.value == 0) radioFocus.value = 4
+  else radioFocus.value--
+  radioRefs.value[radioFocus.value].value.focus()
+  statusAnswer.value = radioRefs.value[radioFocus.value].value.value
+})
+
+onKeyStroke(['Tab'], (e) => {
+  if (selected.value == false && statusAnswer.value != '') return
+  if (e.key === 'Tab') {
+    e.preventDefault()
+  }
+  radioRefs.value[radioFocus.value].value.focus()
+  statusAnswer.value = radioRefs.value[radioFocus.value].value.value
 })
 
 const tips = ref()
@@ -279,9 +340,9 @@ const hideInfo = ref(false)
       <h4>Bruk tastatursnarveier for enkel navigasjon:</h4>
       <p><b>TAB</b> for å gå til neste input-felt</p>
       <p><b>SHIFT</b>+<b>TAB</b> for å gå tilbake til forrige input-felt</p>
-      <p><b>OPP</b> & <b>NED</b> for å bla mellom normlistestatuser</p>
-      <p><b>PAGEUP</b> for å gå til neste oppgave</p>
-      <p><b>PAGEDOWN</b> for å gå til forrige oppgave</p>
+      <p><b>OPP</b> eller <b>J</b> & <b>NED</b> eller <b>K</b> for å bla mellom normlistestatuser</p>
+      <p><b>PAGEDOWN</b> eller <b>L</b> for å gå til neste oppgave</p>
+      <p><b>PAGEUP</b> eller <b>H</b> for å gå til forrige oppgave</p>
       <p><b>END</b> for å avslutte quizzen</p>
     </div>
   </Popover>
@@ -352,6 +413,7 @@ const hideInfo = ref(false)
                 value="SPISELIG"
                 name="normlist"
                 v-model="statusAnswer"
+                :ref="radioRefs[0]"
               />
               <label for="spiselig">Spiselig</label>
             </div>
@@ -362,6 +424,7 @@ const hideInfo = ref(false)
                 value="SPISELIG_MED_MERKNAD"
                 name="normlist"
                 v-model="statusAnswer"
+                :ref="radioRefs[1]"
               />
               <label for="spiselig-merknad">Spiselig med merknad</label>
             </div>
@@ -372,6 +435,7 @@ const hideInfo = ref(false)
                 value="IKKE_MATSOPP"
                 name="normlist"
                 v-model="statusAnswer"
+                :ref="radioRefs[2]"
               />
               <label for="ikke-matsopp">Ikke matsopp</label>
             </div>
@@ -382,6 +446,7 @@ const hideInfo = ref(false)
                 value="GIFTIG"
                 name="normlist"
                 v-model="statusAnswer"
+                :ref="radioRefs[3]"
               />
               <label for="giftig">Giftig</label>
             </div>
@@ -392,6 +457,7 @@ const hideInfo = ref(false)
                 value="MEGET_GIFTIG"
                 name="normlist"
                 v-model="statusAnswer"
+                :ref="radioRefs[4]"
               />
               <label for="meget-giftig">Meget giftig</label>
             </div>
@@ -593,11 +659,16 @@ nav {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-::v-global(.p-paginator-page), ::v-global(.p-paginator-next), ::v-global(.p-paginator-prev), ::v-global(.p-paginator-last), ::v-global(.p-paginator-first) {
+::v-global(.p-paginator-page),
+::v-global(.p-paginator-next),
+::v-global(.p-paginator-prev),
+::v-global(.p-paginator-last),
+::v-global(.p-paginator-first) {
   margin: 3px !important;
 }
 
-::v-global(.p-paginator-next), ::v-global(.p-paginator-prev) {
+::v-global(.p-paginator-next),
+::v-global(.p-paginator-prev) {
   padding-left: 5px !important;
   padding-right: 5px !important;
   font-weight: bold;
