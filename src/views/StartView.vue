@@ -85,8 +85,14 @@ const toggleSettings = () => {
 
 async function onStart() {
   try {
+    let spec = ''
+    if (specials.value == '') {
+      spec = 'x'
+    } else {
+      spec = specials.value
+    }
     await axios.post(
-      `http://${ip}:8080/quizzes/user/` + tokenStore.getUser() + '/' + specials.value,
+      `http://${ip}:8080/quizzes/user/` + tokenStore.getUser() + '/' + spec,
       {
         nrOfTasks: parseInt(numOfTasks.value),
         quizContent: reverseFormatString(species.value),
@@ -170,9 +176,9 @@ const setBarOptions = () => {
 
 const updateRefs = () => {
   species.value = 'Hele pensum'
-  if (specials.value == "Alle pensumarter") {
+  if (specials.value == 'Alle pensumarter') {
     numOfTasks.value = 148
-  } else if (specials.value == "") {
+  } else if (specials.value == '') {
     numOfTasks.value = 30
   }
 }
@@ -200,24 +206,54 @@ const updateRefs = () => {
           <div id="innstillinger-wrapper" v-if="advancedSettings">
             <label for="nr-of-tasks">Antall oppgaver:</label>
             <div id="radio-wrapper">
-              <input type="radio" id="ten" name="nr-of-tasks" v-model="numOfTasks" value="10" :disabled="specials == 'Alle pensumarter'"/>
+              <input
+                type="radio"
+                id="ten"
+                name="nr-of-tasks"
+                v-model="numOfTasks"
+                value="10"
+                :disabled="specials == 'Alle pensumarter'"
+              />
               <label for="ten">10</label>
-              <input type="radio" id="twenty" name="nr-of-tasks" v-model="numOfTasks" value="20" :disabled="specials == 'Alle pensumarter'"/>
+              <input
+                type="radio"
+                id="twenty"
+                name="nr-of-tasks"
+                v-model="numOfTasks"
+                value="20"
+                :disabled="specials == 'Alle pensumarter'"
+              />
               <label for="twenty">20</label>
-              <input type="radio" id="thirty" name="nr-of-tasks" v-model="numOfTasks" value="30" :disabled="specials == 'Alle pensumarter'"/>
+              <input
+                type="radio"
+                id="thirty"
+                name="nr-of-tasks"
+                v-model="numOfTasks"
+                value="30"
+                :disabled="specials == 'Alle pensumarter'"
+              />
               <label for="thirty">30</label>
-              <input type="radio" id="fourty" name="nr-of-tasks" v-model="numOfTasks" value="40" :disabled="specials == 'Alle pensumarter'"/>
+              <input
+                type="radio"
+                id="fourty"
+                name="nr-of-tasks"
+                v-model="numOfTasks"
+                value="40"
+                :disabled="specials == 'Alle pensumarter'"
+              />
               <label for="fourty">40</label>
-              <input type="radio" id="fifty" name="nr-of-tasks" v-model="numOfTasks" value="50" :disabled="specials == 'Alle pensumarter'"/>
+              <input
+                type="radio"
+                id="fifty"
+                name="nr-of-tasks"
+                v-model="numOfTasks"
+                value="50"
+                :disabled="specials == 'Alle pensumarter'"
+              />
               <label for="fifty">50</label>
             </div>
             <label for="species">Sopparter:</label>
-            <select
-              name="species"
-              id="species"
-              v-model="species"
-              :disabled="specials != ''"
-            >
+            <select name="species" id="species" v-model="species" :disabled="specials != ''">
               <option value="Hele pensum">Hele pensum</option>
               <option value="Spiselige">Spiselige</option>
               <option value="Ikke matsopp">Ikke matsopp</option>
@@ -239,7 +275,9 @@ const updateRefs = () => {
             <label for="specials">Velg en spesialquiz:</label>
             <select name="specials" id="specials" v-model="specials" @change="updateRefs">
               <option value=""></option>
-              <option value="Dine dårligste arter" :disabled="nrOfSpecies < 50">Dine dårligste arter</option>
+              <option value="Dine dårligste arter" :disabled="nrOfSpecies < 50">
+                Dine dårligste arter
+              </option>
               <option value="Alle pensumarter">Alle pensumarter</option>
             </select>
           </div>
