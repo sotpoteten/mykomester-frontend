@@ -12,8 +12,8 @@ import Popover from 'primevue/popover'
 
 const tokenStore = useTokenStore()
 const tasks = ref([])
-const imgurl = ref('')
-const photographer = ref('')
+const imgurls = ref([])
+const photographers = ref([])
 const taskNr = ref(1)
 const first = ref(0)
 const currentTask = ref(1)
@@ -41,8 +41,9 @@ const radioFocus = ref(0)
     quizData.value = quizResponse.data
     nrOfTasks.value = quizData.value.nrOfTasks
     tasks.value = quizData.value.tasks
-    imgurl.value = tasks.value[taskNr.value.value - 1].pictureUrl
-    photographer.value = tasks.value[taskNr.value.value - 1].photographer
+
+    imgurls.value = tasks.value[taskNr.value.value - 1].pictureUrls.split(',')
+    photographers.value = tasks.value[taskNr.value.value - 1].photographers.split(',')
     speciesName.value = tasks.value[taskNr.value.value - 1].speciesName
 
     if (quizData.value.quizMode == 'ARTSBESTEMMELSE') onlySpecies.value = true
@@ -74,7 +75,7 @@ const radioFocus = ref(0)
       radioRefs.value.push(ref())
     }
   } catch (error) {
-    console.error(error.response.data)
+    console.error(error)
   }
 })()
 ;(async () => {
@@ -153,8 +154,8 @@ function updateTask() {
   }
 
   //Get image-info for new task
-  imgurl.value = tasks.value[taskNr.value.value - 1].pictureUrl
-  photographer.value = tasks.value[taskNr.value.value - 1].photographer
+  imgurls.value = tasks.value[taskNr.value.value - 1].pictureUrls.split(',')
+  photographers.value = tasks.value[taskNr.value.value - 1].photographers.split(',')
   speciesName.value = tasks.value[taskNr.value.value - 1].speciesName
 
   //Get saved values for answers
@@ -311,7 +312,7 @@ const toggleTips = (event) => {
   tips.value.toggle(event)
 }
 
-const zoomImg = ref(false)
+const zoomImgs = ref([false, false, false])
 </script>
 
 <template>
@@ -363,18 +364,27 @@ const zoomImg = ref(false)
             <v-icon name="md-tipsandupdates" scale="2" />
           </div>
         </div>
-        <div id="img-wrapper">
-          <img v-bind:src="imgurl" alt="Soppbilde" @click="zoomImg = !zoomImg" id="smallImg" :class="{ hidden: zoomImg }"/>
-          <img
-            v-bind:src="imgurl"
-            alt="Soppbilde_stort"
-            @click="zoomImg = !zoomImg"
-            id="imgZoom"
-            v-if="zoomImg"
-          />
-          <div class="image-info" ref="imgInfo" :class="{ hidden: zoomImg }">
-            Foto: {{ photographer }}. Gjenbruk iht.
-            <a href="https://creativecommons.org/licenses/by/4.0/" tabindex="-1">CC BY 4.0</a>
+        <div id="img-container">
+          <div class="img-wrapper" v-for="(url, index) in imgurls" :key="url">
+            <img
+              v-bind:src="url"
+              alt="Soppbilde"
+              @click="zoomImgs[index] = !zoomImgs[index]"
+              id="smallImg"
+              :class="{ hidden: zoomImgs[index] }"
+            />
+            <img
+              v-bind:src="url"
+              alt="Soppbilde_stort"
+              @click="zoomImgs[index] = !zoomImgs[index]"
+              class="imgZoom"
+              :id="'imgZoom' + index.toString()"
+              v-if="zoomImgs[index]"
+            />
+            <div class="image-info" ref="imgInfo" :class="{ hidden: zoomImgs[index] }">
+              Foto: {{ photographers[index] }}. Gjenbruk iht.
+              <a href="https://creativecommons.org/licenses/by/4.0/" tabindex="-1">CC BY 4.0</a>
+            </div>
           </div>
         </div>
         <div id="container-wrapper">
@@ -527,12 +537,23 @@ h1 {
   justify-content: space-between;
 }
 
-#img-wrapper {
+#img-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  height: 50%;
+  justify-content: center;
+  align-items: center;
+}
+
+.img-wrapper {
   display: flex;
   justify-content: center;
-  height: 50%;
+  height: 100%;
   margin-bottom: 10px;
   position: relative;
+  margin: 0px 5px 0px 5px;
+  /*max-width: 32%;*/
 }
 
 img {
@@ -540,22 +561,32 @@ img {
   height: 100%;
   border-radius: 10px;
   box-shadow: 2px 2px 2px black;
+  max-width: 100%;
+  aspect-ratio: initial;
 }
 
 img:hover {
   cursor: zoom-in;
 }
 
-#imgZoom {
+.imgZoom {
   height: 97vh;
   position: fixed;
   top: 10px;
   margin-bottom: 10px;
-  z-index: 3;
+  z-index: 1;
 }
 
-#imgZoom:hover {
+.imgZoom:hover {
   cursor: zoom-out;
+}
+
+#imgZoom0 {
+  left: 10px;
+}
+
+#imgZoom2 {
+  right: 10px;
 }
 
 #container-wrapper {
