@@ -7,6 +7,7 @@ import axios from 'axios'
 import { useTokenStore } from '@/stores/token.js'
 import Chart from 'primevue/chart'
 import { ip } from '@/utils/httputils.js'
+import Popover from 'primevue/popover'
 
 const tokenStore = useTokenStore()
 
@@ -21,6 +22,7 @@ const lastname = ref('')
 const specials = ref('')
 const nrOfSpecies = ref(0)
 const loading = ref(false)
+const info = ref()
 
 ;(async () => {
   const settingsResponse = await axios.get(
@@ -86,7 +88,7 @@ const toggleSettings = () => {
 
 async function onStart() {
   try {
-    loading.value = true;
+    loading.value = true
     let spec = ''
     if (specials.value == '') {
       spec = 'x'
@@ -184,15 +186,31 @@ const updateRefs = () => {
     numOfTasks.value = 30
   }
 }
+
+const toggleInfo = (event) => {
+  info.value.toggle(event)
+}
 </script>
 
 <template>
+  <Popover ref="info">
+    <div class="popover-info">
+      <p>Hver oppgave viser 3 bilder av samme art, men <b>IKKE</b> nødvendigvis samme eksemplar.</p>
+      <p>Bildene er hentet fra <a href="https://artsobservasjoner.no">artsobservasjoner.no</a> så det kan være feil i rapporteringen av art derfra.</p>
+      <p></p>
+    </div>
+  </Popover>
   <div class="flex-container">
     <div class="header">
       <NavBar></NavBar>
     </div>
     <div class="main">
       <div class="content-box" id="left">
+        <div class="info-bar">
+          <div @click="toggleInfo">
+            <v-icon name="bi-info-circle-fill" scale="2" />
+          </div>
+        </div>
         <div class="wrapper">
           <h3>Antall oppgaver: {{ numOfTasks }}</h3>
           <h3 v-if="specials == ''">Arter: {{ species }}</h3>
@@ -201,7 +219,7 @@ const updateRefs = () => {
           <h3 v-if="specials != ''">Spesialquiz: {{ specials }}</h3>
           <button id="startquiz" @click="onStart" :disabled="loading">
             Start quiz
-            <v-icon name="ri-loader-2-fill" animation="spin" speed="slow" v-if="loading"/>
+            <v-icon name="ri-loader-2-fill" animation="spin" speed="slow" v-if="loading" />
           </button>
           <div id="avansert-wrapper" @click="toggleSettings">
             <v-icon name="bi-caret-down-fill" v-if="!advancedSettings" />
@@ -314,9 +332,10 @@ const updateRefs = () => {
   margin-bottom: 10px;
   margin-left: 10px;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   color: white;
+  flex-direction: column;
 }
 
 #right {
@@ -342,6 +361,7 @@ const updateRefs = () => {
 
 .wrapper {
   align-items: center;
+  height: 90%;
 }
 
 h3 {
@@ -419,5 +439,19 @@ select {
 #info-text {
   font-family: Arial, Helvetica, sans-serif;
   font-weight: bold;
+}
+
+.info-bar {
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+  justify-self: flex-start;
+  height: 15%;
+  padding: 2%;
+}
+
+.popover-info {
+  width: 40vb;
+  font-family: Arial, Helvetica, sans-serif;
 }
 </style>
