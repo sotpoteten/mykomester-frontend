@@ -15,6 +15,7 @@ import {
   BiImageFill,
   MdNoteRound,
   MdTipsandupdates,
+  RiLoader2Fill,
 } from 'oh-vue-icons/icons'
 import PrimeVue from 'primevue/config'
 import Aura from '@primevue/themes/aura'
@@ -32,6 +33,7 @@ addIcons(
   BiImageFill,
   MdNoteRound,
   MdTipsandupdates,
+  RiLoader2Fill,
 )
 
 const app = createApp(App)

@@ -11,12 +11,15 @@ const firstname = ref('')
 const lastname = ref('')
 const email = ref('')
 const password = ref('')
+const loading = ref(false)
+const errorMsg = ref('')
 
 const tokenStore = useTokenStore()
 tokenStore.getAuthorizationConfig()
 
 async function onSubmit() {
   try {
+    loading.value = true
     await axios.post(`http://${ip}:8080/users`, {
       firstName: firstname.value,
       lastName: lastname.value,
@@ -31,6 +34,8 @@ async function onSubmit() {
     tokenStore.saveInStore(email.value, loginResponse.data)
     router.push('/start')
   } catch (error) {
+    loading.value = false
+    errorMsg.value = error.response.data
     console.error(error.response.data)
   }
 }
@@ -53,7 +58,11 @@ async function onSubmit() {
           <input type="text" id="email" v-model="email" />
           <label for="password">*Passord:</label>
           <input type="password" id="password" v-model="password" @keyup.enter="onSubmit"/>
-          <button class="submit" @click="onSubmit">Registrer deg</button>
+          <button class="submit" @click="onSubmit" :disabled="loading">
+            Registrer deg
+            <v-icon name="ri-loader-2-fill" animation="spin" speed="slow" v-if="loading"/>
+          </button>
+          <p class="error">{{ errorMsg }}</p>
           <p>Felter merket med * må fylles ut.</p>
         </div>
       </div>
@@ -74,7 +83,12 @@ async function onSubmit() {
 }
 
 p {
-  margin: 0px;
+  margin: 3px 0px;
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.error {
+  color: red;
+  font-weight: bold;
 }
 </style>

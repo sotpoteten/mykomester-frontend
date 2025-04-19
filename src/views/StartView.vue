@@ -20,6 +20,7 @@ const firstname = ref('')
 const lastname = ref('')
 const specials = ref('')
 const nrOfSpecies = ref(0)
+const loading = ref(false)
 
 ;(async () => {
   const settingsResponse = await axios.get(
@@ -85,6 +86,7 @@ const toggleSettings = () => {
 
 async function onStart() {
   try {
+    loading.value = true;
     let spec = ''
     if (specials.value == '') {
       spec = 'x'
@@ -197,7 +199,10 @@ const updateRefs = () => {
           <h3>Quizmodus: {{ quizMode }}</h3>
           <h3 v-if="false">Svarmodus: {{ answerMode }}</h3>
           <h3 v-if="specials != ''">Spesialquiz: {{ specials }}</h3>
-          <button id="startquiz" @click="onStart">Start quiz</button>
+          <button id="startquiz" @click="onStart" :disabled="loading">
+            Start quiz
+            <v-icon name="ri-loader-2-fill" animation="spin" speed="slow" v-if="loading"/>
+          </button>
           <div id="avansert-wrapper" @click="toggleSettings">
             <v-icon name="bi-caret-down-fill" v-if="!advancedSettings" />
             <v-icon name="bi-caret-up-fill" v-if="advancedSettings" />
@@ -355,6 +360,9 @@ h3 {
   width: 100%;
   font-size: 25px;
   padding: 10px 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 #avansert-wrapper {
@@ -368,6 +376,7 @@ h3 {
 
 svg {
   margin-right: 5px;
+  margin-left: 5px;
 }
 
 #radio-wrapper {

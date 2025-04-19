@@ -11,6 +11,7 @@ const email = ref('')
 const visible = ref(false)
 const isError = ref(false)
 const message = ref('')
+const loading = ref(false)
 const dialogStyle = ref({
   content: {
     padding: {
@@ -25,6 +26,7 @@ const dialogStyle = ref({
 })
 
 async function onSubmit() {
+  loading.value = true
   isError.value = false
   try {
     await axios.post(`http://${ip}:8080/glemt_passord`, email.value, {
@@ -33,7 +35,9 @@ async function onSubmit() {
       },
     })
     visible.value = true
+    loading.value = false
   } catch (error) {
+    loading.value = false
     console.log(error)
     if (error.status == 404) {
       isError.value = true
@@ -70,7 +74,10 @@ async function onSubmit() {
           <input type="text" id="username" v-model="email" />
           <div class="btn-wrapper">
             <button class="submit" id="exit" @click="router.push('/login')">Avbryt</button>
-            <button class="submit" @click="onSubmit">Tilbakestill passord</button>
+            <button class="submit" @click="onSubmit" :disabled="loading">
+              Tilbakestill passord
+              <v-icon name="ri-loader-2-fill" animation="spin" speed="slow" v-if="loading" />
+            </button>
           </div>
           <p v-if="isError">
             {{ message }}
