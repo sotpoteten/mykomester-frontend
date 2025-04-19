@@ -184,11 +184,15 @@ const toggleNote = (event) => {
 
 <template>
   <Popover v-for="(answer, index) in answers" :key="answer" :ref="imgPops[index]">
-    <img :src="answer.pictureUrl" alt="bilde" class="popover-img" />
-    <p class="img-info">
-      Foto: {{ answer.photographer }}. Gjenbruk iht.
-      <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>
-    </p>
+    <div class="popover-container">
+      <div v-for="(url, index) in answer.pictureUrl.split(',')" :key="url" class="img-wrapper">
+        <img :src="url" alt="bilde" class="popover-img" />
+        <p class="img-info">
+          Foto: {{ answer.photographer.split(',')[index] }}. Gjenbruk iht.
+          <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>
+        </p>
+      </div>
+    </div>
   </Popover>
   <Popover v-for="(answer, index) in answers" :key="answer" :ref="notePops[index]">
     <p class="note"><b>Din merknad:</b> {{ answer.answeredNote }}</p>
@@ -225,17 +229,30 @@ const toggleNote = (event) => {
                 <td @click="toggleImg" :id="index" class="clickable">
                   <v-icon name="bi-image-fill" :id="index" />
                 </td>
-                <td :class="{ green: answer.speciesCorrect, red: !answer.speciesCorrect }" v-if="quizMode == 'STANDARD' || quizMode == 'ARTSBESTEMMELSE'">
+                <td
+                  :class="{ green: answer.speciesCorrect, red: !answer.speciesCorrect }"
+                  v-if="quizMode == 'STANDARD' || quizMode == 'ARTSBESTEMMELSE'"
+                >
                   {{ capitalizeFirstLetter(answer.answeredSpecies) }}
                 </td>
-                <td :class="{ green: answer.categoryCorrect, red: !answer.categoryCorrect }" v-if="quizMode == 'STANDARD' || quizMode == 'NORMLISTESTATUS'">
+                <td
+                  :class="{ green: answer.categoryCorrect, red: !answer.categoryCorrect }"
+                  v-if="quizMode == 'STANDARD' || quizMode == 'NORMLISTESTATUS'"
+                >
                   {{ formatString(answer.answeredCategory) }}
                 </td>
-                <td @click="toggleNote" :id="index" class="clickable" v-if="quizMode == 'STANDARD' || quizMode == 'NORMLISTESTATUS'">
+                <td
+                  @click="toggleNote"
+                  :id="index"
+                  class="clickable"
+                  v-if="quizMode == 'STANDARD' || quizMode == 'NORMLISTESTATUS'"
+                >
                   <v-icon name="md-note-round" :id="index" />
                 </td>
                 <td>{{ capitalizeFirstLetter(answer.correctSpecies) }}</td>
-                <td v-if="quizMode == 'STANDARD' || quizMode == 'NORMLISTESTATUS'">{{ formatString(answer.correctCategory) }}</td>
+                <td v-if="quizMode == 'STANDARD' || quizMode == 'NORMLISTESTATUS'">
+                  {{ formatString(answer.correctCategory) }}
+                </td>
               </tr>
             </tbody>
           </table>
@@ -375,5 +392,15 @@ h1 {
 
 .clickable:hover {
   cursor: pointer;
+}
+
+.popover-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.img-wrapper {
+  margin: 0 5px 0 5px;
+  width: min-content;
 }
 </style>
