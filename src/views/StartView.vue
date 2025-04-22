@@ -195,9 +195,10 @@ const toggleInfo = (event) => {
 <template>
   <Popover ref="info">
     <div class="popover-info">
+      <p>Hver oppgave gir 2 poeng for riktig artsbestemmelse og 1 poeng for riktig normlistestatus. Arten må være riktig for å få poeng for riktig normlistestatus.</p>
       <p>Hver oppgave viser 3 bilder av samme art, men <b>IKKE</b> nødvendigvis samme eksemplar.</p>
       <p>Bildene er hentet fra <a href="https://artsobservasjoner.no">artsobservasjoner.no</a> så det kan være feil i rapporteringen av art derfra.</p>
-      <p></p>
+      <p>Spesialquiz med dine dårligste arter låses opp når du har testet deg i minst 50 ulike arter.</p>
     </div>
   </Popover>
   <div class="flex-container">
@@ -207,7 +208,7 @@ const toggleInfo = (event) => {
     <div class="main">
       <div class="content-box" id="left">
         <div class="info-bar">
-          <div @click="toggleInfo">
+          <div id="info-icon" @mouseenter="toggleInfo" @mouseleave="toggleInfo">
             <v-icon name="bi-info-circle-fill" scale="2" />
           </div>
         </div>
