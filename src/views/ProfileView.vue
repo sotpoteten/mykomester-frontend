@@ -175,7 +175,7 @@ function onLogout() {
           <input v-model="confirmPassword" type="password" id="confirm-password" />
           <button class="submit" @click="onSaveUserSettings">
             Lagre brukerprofil
-            <v-icon name="md-save-round" />
+            <v-icon id="icon" name="md-save-round" />
           </button>
           <p>Felter merket med * må fylles ut.</p>
         </div>
@@ -197,19 +197,18 @@ function onLogout() {
               <input type="radio" id="fifty" name="nr-of-tasks" value="50" v-model="nrOfTasks" />
               <label for="fifty">50</label>
             </div>
-            <label for="species" v-if="false">Sopparter:</label>
-            <select name="species" id="species" v-model="species" v-if="false">
+            <label for="species">Sopparter:</label>
+            <select name="species" id="species" v-model="species">
               <option value="Hele pensum">Hele pensum</option>
               <option value="Spiselige">Spiselige</option>
               <option value="Matsopp">Matsopp</option>
               <option value="Giftige">Giftige</option>
             </select>
-            <label for="quiz-mode" v-if="false">Quizmodus:</label>
-            <select name="quiz-mode" id="quiz-mode" v-model="quizMode" v-if="false">
+            <label for="quiz-mode">Quizmodus:</label>
+            <select name="quiz-mode" id="quiz-mode" v-model="quizMode">
               <option value="Standard">Standard</option>
-              <option selected="Kun artsbestemmelse">Kun artsbestemmelse</option>
-              <option value="Kun normlistestatus">Kun normlistestatus</option>
-              <option value="Forgiftningsforløp">Forgiftningsforløp</option>
+              <option selected value="Artsbestemmelse">Artsbestemmelse</option>
+              <option value="Normlistestatus">Normlistestatus</option>
             </select>
             <label for="answer-mode" v-if="false">Svarmodus:</label>
             <select name="answer-mode" id="answer-mode" v-model="answerMode" v-if="false">
@@ -219,14 +218,14 @@ function onLogout() {
             </select>
             <button class="submit" id="save" @click="onSaveQuizSettings">
               Lagre innstillinger
-              <v-icon name="md-save-round" />
+              <v-icon id="icon" name="md-save-round" />
             </button>
           </div>
         </div>
         <div class="content-box" id="bottom">
           <button class="submit" id="logout" @click="onLogout">
             Logg ut
-            <v-icon name="md-logout-round" />
+            <v-icon id="icon" name="md-logout-round" />
           </button>
         </div>
       </div>
@@ -238,8 +237,8 @@ function onLogout() {
 #left {
   background-color: #955e42;
   width: 60%;
-  margin-bottom: 10px;
-  margin-left: 10px;
+  margin-bottom: 0.5em;
+  margin-left: 0.5em;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -263,15 +262,21 @@ function onLogout() {
 #bottom {
   background-color: #553739;
   height: 20%;
-  margin-bottom: 10px;
+  margin-bottom: 0.5em;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
+h2 {
+  font-size: 4vh;
+  margin-bottom: 0.3em;
+}
+
 p {
   margin: 0px;
   font-family: Arial, Helvetica, sans-serif;
+  font-size: 2.5vh;
 }
 
 #innstillinger-wrapper {
@@ -281,21 +286,21 @@ p {
   align-items: center;
 
   label {
-    margin: 5px;
+    margin: 0.25em;
   }
 }
 
 input[type='radio'] {
-  margin: 3px 3px 3px 20px;
+  margin: 0.15em 0.15em 0.15em 1em;
   accent-color: black;
 }
 
 select {
   width: 100%;
-  font-size: 15px;
-  border-radius: 5px;
+  font-size: 2.5vh;
+  border-radius: 0.25em;
   border: none;
-  height: 25px;
+  height: 4vh;
 }
 
 #radio-wrapper {
@@ -314,12 +319,10 @@ select {
   width: 50%;
 }
 
-svg {
+#icon {
   margin-left: 10px;
-}
-
-p {
-  margin-top: 0;
+  height: 3vh;
+  width: 3vh;
 }
 
 #back-to-login {

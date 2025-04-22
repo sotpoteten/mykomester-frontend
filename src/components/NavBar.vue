@@ -23,9 +23,9 @@ const logo = ref(app_logo)
 
 <style scoped>
 h1 {
-  font-size: 50px;
+  font-size: 8vh;
   font-weight: normal;
-  margin: 20px 20px;
+  margin: 0.4em 0.4em;
 }
 
 h1:hover {
@@ -44,7 +44,7 @@ h1:hover {
   width: 100%;
   height: fit-content;
   z-index: 999;
-  box-shadow: 0px 3px 3px rgb(117, 117, 117);
+  box-shadow: 0 0.2em 0.2em rgb(117, 117, 117);
 }
 
 .buttons {
@@ -56,7 +56,7 @@ h1:hover {
 }
 
 img {
-  height: 80px;
-  margin: 10px 0px 10px 20px;
+  height: 12vh;
+  margin: 0.8em 0 0.8em 1.5em;
 }
 </style>

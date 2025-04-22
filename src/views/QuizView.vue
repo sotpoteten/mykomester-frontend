@@ -95,7 +95,7 @@ const showExitDialog = ref(false)
 const showSaveDialog = ref(false)
 
 const paginatorStyle = ref({
-  padding: '3px',
+  padding: '0.3em',
   background: '#748e54',
   gap: '10',
   nav: {
@@ -109,10 +109,10 @@ const paginatorStyle = ref({
         background: '#353f27',
         color: '#ffffff',
       },
-      width: '40px',
-      height: '24px',
+      width: '2.5vw',
+      height: '4vh',
       border: {
-        radius: '5px',
+        radius: '0.4em',
       },
     },
   },
@@ -337,7 +337,7 @@ const zoomImgs = ref([false, false, false])
   </Dialog>
   <Popover ref="tips">
     <div class="tips">
-      <h4>Klikk på bildet for å zoome.</h4>
+      <h4>Klikk på et bilde for å zoome.</h4>
       <h4>Bruk tastatursnarveier for enkel navigasjon:</h4>
       <p><b>TAB</b> for å gå til neste input-felt</p>
       <p><b>SHIFT</b>+<b>TAB</b> for å gå tilbake til forrige input-felt</p>
@@ -354,14 +354,14 @@ const zoomImgs = ref([false, false, false])
       <div class="content-box" id="center">
         <div id="header-wrapper">
           <div class="tips-icon" style="visibility: hidden">
-            <v-icon name="md-tipsandupdates" scale="2" />
+            <v-icon id="idea-icon" name="md-tipsandupdates" />
           </div>
           <div id="header">
             <h1>Oppgave {{ taskNr }}</h1>
             <h1 v-if="onlyNormlist">: {{ capitalizeFirstLetter(speciesName) }}</h1>
           </div>
           <div class="tips-icon" @mouseenter="toggleTips" @mouseleave="toggleTips">
-            <v-icon name="md-tipsandupdates" scale="2" />
+            <v-icon id="idea-icon" name="md-tipsandupdates" />
           </div>
         </div>
         <div id="img-container">
@@ -517,8 +517,7 @@ const zoomImgs = ref([false, false, false])
 #center {
   background-color: #553739;
   width: 100%;
-  margin-left: 10px;
-  margin-bottom: 10px;
+  margin: 1.5vh;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
@@ -527,7 +526,12 @@ const zoomImgs = ref([false, false, false])
 
 h1 {
   font-weight: normal;
-  margin: 10px 0px 10px 0px;
+  margin: 0.25em 0px 0.25em 0px;
+  font-size: 5vh;
+}
+
+h2 {
+  font-size: 4vh;
 }
 
 #header-wrapper {
@@ -550,17 +554,16 @@ h1 {
   display: flex;
   justify-content: center;
   height: 100%;
-  margin-bottom: 10px;
   position: relative;
-  margin: 0px 5px 0px 5px;
+  margin: 0px 0.25em 0.5em 0.25em;
   /*max-width: 32%;*/
 }
 
 img {
   display: flex;
   height: 100%;
-  border-radius: 10px;
-  box-shadow: 2px 2px 2px black;
+  border-radius: 0.5em;
+  box-shadow: 0.15em 0.15em 0.15em black;
   max-width: 100%;
   aspect-ratio: initial;
 }
@@ -572,8 +575,7 @@ img:hover {
 .imgZoom {
   height: 97vh;
   position: fixed;
-  top: 10px;
-  margin-bottom: 10px;
+  top: 1.5vh;
   z-index: 1;
 }
 
@@ -582,11 +584,11 @@ img:hover {
 }
 
 #imgZoom0 {
-  left: 10px;
+  left: 0.5em;
 }
 
 #imgZoom2 {
-  right: 10px;
+  right: 0.5em;
 }
 
 #container-wrapper {
@@ -599,9 +601,9 @@ img:hover {
 
 .answer-container {
   display: flex;
-  margin: 2.5% 10px 2.5% 0px;
-  border-radius: 10px;
-  box-shadow: 2px 2px 2px black;
+  margin: 2.5% 0.5em 2.5% 0px;
+  border-radius: 0.5em;
+  box-shadow: 0.15em 0.15em 0.15em black;
   background-color: #955e42;
   height: 95%;
   width: fit-content;
@@ -609,22 +611,24 @@ img:hover {
 }
 
 #species {
-  padding: 0px 10px;
+  padding: 0 0.5em;
 }
 
 #normlist {
   width: fit-content;
-  padding: 0px 5px;
+  padding: 0 0.25em;
   justify-content: space-between;
 }
 
 input[type='radio'] {
-  margin: 3px;
+  margin: 0.2em;
   accent-color: black;
+  height: 2.2vh;
+  width: 2.2vh;
 }
 
 label {
-  margin: 5px;
+  margin: 0.25em;
 }
 
 .radio-wrapper {
@@ -634,12 +638,13 @@ label {
 }
 
 #note {
-  padding: 0px 10px;
+  padding: 0 0.5em;
 }
 
 textarea {
-  font-size: 15px;
-  border-radius: 5px;
+  font-size: 2.5vh;
+  font-family: Arial, Helvetica, sans-serif;
+  border-radius: 0.25em;
   border: none;
   resize: none;
 }
@@ -650,7 +655,7 @@ textarea {
   width: 95%;
   justify-content: space-between;
   align-items: center;
-  margin: 0px 2.5% 10px;
+  margin: 0 2.5% 0.5em;
 }
 
 #save {
@@ -662,16 +667,20 @@ textarea {
 }
 
 #save-icon {
-  margin-right: 5px;
+  margin-right: 0.25em;
+  height: 2.5vh;
+  width: 2.5vh;
 }
 
 #finish-icon {
-  margin-left: 5px;
+  margin-left: 0.25em;
+  height: 2.5vh;
+  width: 2.5vh;
 }
 
 nav {
-  box-shadow: 2px 2px 2px black;
-  border-radius: 6px;
+  box-shadow: 0.15em 0.15em 0.15em black;
+  border-radius: 0.3em;
 }
 
 #search-list {
@@ -681,15 +690,15 @@ nav {
 }
 
 #search-list li {
-  border: 1px solid #ddd;
-  margin-top: -1px;
+  border: 0.1em solid #ddd;
+  margin-top: -0.1em;
   background-color: #f6f6f6;
-  padding: 2px;
-  font-size: 15px;
+  padding: 0.15em;
+  font-size: 2.5vh;
   color: black;
   display: block;
   font-family: Arial, Helvetica, sans-serif;
-  width: 276px;
+  width: 20.4vw;
 }
 
 #search-list li:hover {
@@ -706,32 +715,34 @@ nav {
 ::v-global(.p-paginator-prev),
 ::v-global(.p-paginator-last),
 ::v-global(.p-paginator-first) {
-  margin: 3px !important;
+  margin: 0.2em !important;
+  font-size: 2vh;
 }
 
 ::v-global(.p-paginator-next),
 ::v-global(.p-paginator-prev) {
-  padding-left: 5px !important;
-  padding-right: 5px !important;
+  padding-left: 0.25em !important;
+  padding-right: 0.25em !important;
   font-weight: bold;
+  font-size: 2vh;
 }
 
 p {
   margin-top: 0;
+  font-size: 2.5vh;
 }
 
 #return {
-  margin: 10px 5px 10px 0px;
+  margin: 0.5em 0.25em 0.5em 0px;
   border: none;
-  border-radius: 5px;
   background-color: #dcdcdc;
   width: fit-content;
-  height: 30px;
   color: black;
-  padding: 5px;
+  padding: 0.25em;
 }
 
 #exit {
+  margin: 0.5em 0.25em 0.5em 0px;
   width: fit-content;
 }
 
@@ -743,14 +754,14 @@ p {
 
 .image-info {
   position: absolute;
-  bottom: 0px;
-  right: 0px;
+  bottom: 0;
+  right: 0;
   font-family: Arial, Helvetica, sans-serif;
   background-color: gray;
   opacity: 0.8;
   border-radius: inherit;
-  font-size: 10px;
-  padding: 1px;
+  font-size: 1.7vh;
+  padding: 0.2em;
 
   a {
     color: white;
@@ -758,9 +769,9 @@ p {
 }
 
 #search-info {
-  margin-top: 5px;
+  margin-top: 0.4em;
   font-family: Arial, Helvetica, sans-serif;
-  font-size: small;
+  font-size: 2vh;
 }
 
 #search-list {
@@ -770,7 +781,7 @@ p {
 }
 
 .tips-icon {
-  margin: 10px;
+  margin: 0.5em;
 }
 
 .tips {
@@ -778,7 +789,8 @@ p {
   display: block;
 
   h4 {
-    margin-top: 5px;
+    margin-top: 0.5em;
+    font-size: 2.5vh;
   }
 }
 
@@ -789,5 +801,10 @@ p {
 #header {
   display: flex;
   flex-direction: row;
+}
+
+#idea-icon {
+  width: 6vh;
+  height: 6vh;
 }
 </style>

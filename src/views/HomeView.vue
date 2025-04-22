@@ -97,9 +97,9 @@ import '@/assets/main.css'
 #left {
   background-color: #9c914f;
   flex-grow: 2;
-  margin-bottom: 10px;
-  margin-left: 10px;
-  padding: 20px;
+  margin-bottom: 0.5em;
+  margin-left: 0.5em;
+  padding: 1em;
   flex-direction: column;
 }
 
@@ -114,31 +114,33 @@ import '@/assets/main.css'
   background-color: #553739;
   height: 40%;
   color: white;
-  padding: 20px;
+  padding: 1em;
   flex-direction: column;
 }
 
 #mid {
   background-color: #955e42;
   height: 40%;
-  padding: 20px;
+  padding: 1em;
   flex-direction: column;
 }
 
 #bottom {
   background-color: #748e54;
   height: 20%;
-  margin-bottom: 10px;
+  margin-bottom: 0.5em;
 }
 
 h1 {
   font-weight: normal;
   margin-top: 0;
+  font-size: 5vh;
 }
 
 h3 {
   font-weight: normal;
   margin-top: 0;
+  font-size: 3vh;
 }
 
 a {
@@ -153,8 +155,8 @@ a {
   background-color: gray;
   opacity: 0.8;
   border-radius: inherit;
-  font-size: 8px;
-  padding: 1px;
+  font-size: 1.3vh;
+  padding: 0.1em;
 
   a {
     color: white;
@@ -165,16 +167,16 @@ a {
   display: flex;
   justify-content: center;
   height: 100%;
-  margin-bottom: 10px;
+  margin-bottom: 0.5em;
   position: relative;
-  margin-right: 10px;
+  margin-right: 0.5em;
 }
 
 img {
   display: flex;
   height: 100%;
-  border-radius: 10px;
-  box-shadow: 2px 2px 2px black;
+  border-radius: 0.5em;
+  box-shadow: 0.15em 0.15em 0.15em black;
 }
 
 #img-container {
@@ -184,6 +186,6 @@ img {
 }
 
 li {
-  font-size: 20px;
+  font-size: 3.2vh;
 }
 </style>

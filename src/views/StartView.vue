@@ -197,7 +197,8 @@ const toggleInfo = (event) => {
     <div class="popover-info">
       <p>Hver oppgave gir 2 poeng for riktig artsbestemmelse og 1 poeng for riktig normlistestatus. Arten må være riktig for å få poeng for riktig normlistestatus.</p>
       <p>Hver oppgave viser 3 bilder av samme art, men <b>IKKE</b> nødvendigvis samme eksemplar.</p>
-      <p>Bildene er hentet fra <a href="https://artsobservasjoner.no">artsobservasjoner.no</a> så det kan være feil i rapporteringen av art derfra.</p>
+      <p>Bildene er hentet fra <a href="https://artsobservasjoner.no">artsobservasjoner.no</a> så vi tar forbehold om feil i rapporteringen derfra.</p>
+      <p>Kvaliteten på noen bilder kan være for dårlig for en sikker artsbestemmelse, men så kan være greit å ha i bakhodet at dette er et øvingsverktøy, ikke et testverktøy.</p>
       <p>Spesialquiz med dine dårligste arter låses opp når du har testet deg i minst 50 ulike arter.</p>
     </div>
   </Popover>
@@ -208,8 +209,8 @@ const toggleInfo = (event) => {
     <div class="main">
       <div class="content-box" id="left">
         <div class="info-bar">
-          <div id="info-icon" @mouseenter="toggleInfo" @mouseleave="toggleInfo">
-            <v-icon name="bi-info-circle-fill" scale="2" />
+          <div @mouseenter="toggleInfo" @mouseleave="toggleInfo">
+            <v-icon id="info-icon" name="bi-info-circle-fill" scale="10" />
           </div>
         </div>
         <div class="wrapper">
@@ -220,11 +221,11 @@ const toggleInfo = (event) => {
           <h3 v-if="specials != ''">Spesialquiz: {{ specials }}</h3>
           <button id="startquiz" @click="onStart" :disabled="loading">
             Start quiz
-            <v-icon name="ri-loader-2-fill" animation="spin" speed="slow" v-if="loading" />
+            <v-icon id="loading-icon" name="ri-loader-2-fill" animation="spin" speed="slow" v-if="loading" />
           </button>
           <div id="avansert-wrapper" @click="toggleSettings">
-            <v-icon name="bi-caret-down-fill" v-if="!advancedSettings" />
-            <v-icon name="bi-caret-up-fill" v-if="advancedSettings" />
+            <v-icon id="caret-icon" name="bi-caret-down-fill" v-if="!advancedSettings" />
+            <v-icon id="caret-icon" name="bi-caret-up-fill" v-if="advancedSettings" />
             <h3>Avanserte innstillinger</h3>
           </div>
           <div id="innstillinger-wrapper" v-if="advancedSettings">
@@ -288,7 +289,6 @@ const toggleInfo = (event) => {
               <option selected value="Standard">Standard</option>
               <option value="Artsbestemmelse">Artsbestemmelse</option>
               <option value="Normlistestatus">Normlistestatus</option>
-              <option disabled value="Forgiftningsforløp">Forgiftningsforløp</option>
             </select>
             <label for="answer-mode" v-if="false">Svarmodus:</label>
             <select name="answer-mode" id="answer-mode" v-model="answerMode" v-if="false">
@@ -330,8 +330,8 @@ const toggleInfo = (event) => {
 #left {
   background-color: #553739;
   width: 60%;
-  margin-bottom: 10px;
-  margin-left: 10px;
+  margin-bottom: 0.5em;
+  margin-left: 0.5em;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -349,38 +349,40 @@ const toggleInfo = (event) => {
   background-color: #955e42;
   height: 50%;
   flex-direction: column;
-  padding-left: 20px;
-  padding-right: 20px;
+  padding-left: 1em;
+  padding-right: 1em;
 }
 
 #bottom {
   background-color: #9c914f;
   height: 50%;
-  margin-bottom: 10px;
+  margin-bottom: 0.5em;
   justify-content: center;
 }
 
 .wrapper {
   align-items: center;
   height: 90%;
+  width: fit-content;
 }
 
 h3 {
-  margin-top: 0px;
-  margin-bottom: 5px;
+  margin-top: 0;
+  margin-bottom: 0.25em;
   font-family: Arial, Helvetica, sans-serif;
+  font-size: 3vh;
 }
 
 #startquiz {
-  margin: 10px 0px;
-  border: solid black 2px;
-  border-radius: 25px;
+  margin: 0.5em 0;
+  border: solid black 0.1em;
+  border-radius: 1.2em;
   background-color: #9c914f;
   font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
   font-weight: normal;
   width: 100%;
-  font-size: 25px;
-  padding: 10px 0px;
+  font-size: 4vh;
+  padding: 0.5em 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -393,11 +395,6 @@ h3 {
 
 #avansert-wrapper:hover {
   cursor: pointer;
-}
-
-svg {
-  margin-right: 5px;
-  margin-left: 5px;
 }
 
 #radio-wrapper {
@@ -415,7 +412,7 @@ svg {
 }
 
 input[type='radio'] {
-  margin: 3px 3px 3px 20px;
+  margin: 0.15em 0.15em 0.15em 1em;
   accent-color: black;
 }
 
@@ -425,21 +422,27 @@ label {
 
 select {
   width: 100%;
-  font-size: 15px;
-  border-radius: 5px;
+  font-size: 2.5vh;
+  border-radius: 0.25em;
   border: none;
-  height: 25px;
+  height: 4vh;
 }
 
 #welcome {
   font-weight: normal;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin-top: 0.6em;
+  margin-bottom: 0.6em;
+  font-size: 5vh;
 }
 
 #info-text {
   font-family: Arial, Helvetica, sans-serif;
   font-weight: bold;
+  font-size: 2.5vh;
+}
+
+#good-luck {
+  font-size: 3.8vh;
 }
 
 .info-bar {
@@ -447,12 +450,31 @@ select {
   width: 100%;
   justify-content: flex-end;
   justify-self: flex-start;
-  height: 15%;
+  height: fit-content;
   padding: 2%;
 }
 
 .popover-info {
-  width: 40vb;
+  width: 40vw;
   font-family: Arial, Helvetica, sans-serif;
 }
+
+#info-icon {
+  margin-right: 0.1em;
+  height: 8vh;
+  width: 8vh;
+}
+
+#caret-icon {
+  margin-right: 0.25em;
+  height: 3vh;
+  width: 3vh;
+}
+
+#loading-icon {
+  margin-left: 0.25em;
+  height: 3vh;
+  width: 3vh;
+}
+
 </style>

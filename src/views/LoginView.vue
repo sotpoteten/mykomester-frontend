@@ -40,15 +40,15 @@ async function onSubmit() {
     <div class="main">
       <div class="content-box" id="center">
         <div class="wrapper">
-          <h2>Logg inn</h2>
+          <h2 id="head">Logg inn</h2>
           <label for="email">E-post:</label>
           <input type="text" id="email" v-model="email" />
           <label>Passord:</label>
           <input type="password" id="password" v-model="password" @keyup.enter="onSubmit" />
           <button class="submit" @click="onSubmit" :disabled="loading">
             Logg inn
-            <v-icon name="md-login-round" />
-            <v-icon name="ri-loader-2-fill" animation="spin" speed="slow" v-if="loading"/>
+            <v-icon id="icon" name="md-login-round"/>
+            <v-icon id="icon" name="ri-loader-2-fill" animation="spin" speed="slow" v-if="loading"/>
           </button>
           <p id="error-message">{{ errorMsg }}</p>
           <p id="forgot-password" @click="router.push('/glemtpassord')">Glemt passord?</p>
@@ -62,17 +62,26 @@ async function onSubmit() {
 #center {
   background-color: #955e42;
   width: 100%;
-  margin-left: 10px;
-  margin-bottom: 10px;
+  margin-left: 0.5em;
+  margin-bottom: 0.5em;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   color: white;
 }
 
+.wrapper {
+  width: 19vw;
+}
+
 p {
-  margin: 3px 0px 3px 0px;
+  margin: 0.2em 0 0.2em 0px;
   font-family: Arial, Helvetica, sans-serif;
+  font-size: 2.5vh;
+}
+
+#head {
+  font-size: 4vh;
 }
 
 #forgot-password {
@@ -88,7 +97,9 @@ p {
   font-weight: bold;
 }
 
-svg {
-  margin-left: 10px;
+#icon {
+  margin-left: 0.2em;
+  height: 3vh;
+  width: 3vh;
 }
 </style>

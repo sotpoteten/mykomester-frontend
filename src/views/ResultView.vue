@@ -227,7 +227,7 @@ const toggleNote = (event) => {
               <tr v-for="(answer, index) in answers" :key="answer">
                 <td>{{ index + 1 }}</td>
                 <td @click="toggleImg" :id="index" class="clickable">
-                  <v-icon name="bi-image-fill" :id="index" />
+                  <v-icon class="icon" name="bi-image-fill" :id="index" />
                 </td>
                 <td
                   :class="{ green: answer.speciesCorrect, red: !answer.speciesCorrect }"
@@ -247,7 +247,7 @@ const toggleNote = (event) => {
                   class="clickable"
                   v-if="quizMode == 'STANDARD' || quizMode == 'NORMLISTESTATUS'"
                 >
-                  <v-icon name="md-note-round" :id="index" />
+                  <v-icon class="icon" name="md-note-round" :id="index" />
                 </td>
                 <td>{{ capitalizeFirstLetter(answer.correctSpecies) }}</td>
                 <td v-if="quizMode == 'STANDARD' || quizMode == 'NORMLISTESTATUS'">
@@ -265,10 +265,11 @@ const toggleNote = (event) => {
             :data="doughnutData"
             :options="doughnutOptions"
             class="w-full md:w-[30rem]"
+            id="doughnut-chart"
           />
         </div>
         <div class="content-box" id="bottom">
-          <Chart type="bar" :data="barData" :options="barOptions" />
+          <Chart type="bar" :data="barData" :options="barOptions" id="bar-chart" />
         </div>
       </div>
     </div>
@@ -279,8 +280,8 @@ const toggleNote = (event) => {
 #left {
   background-color: #553739;
   width: 60%;
-  margin-bottom: 10px;
-  margin-left: 10px;
+  margin-bottom: 0.5em;
+  margin-left: 0.5em;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -292,13 +293,13 @@ const toggleNote = (event) => {
   display: flex;
   flex-direction: column;
   width: 40%;
-  padding-bottom: 10px !important;
+  padding-bottom: 0.5em !important;
 }
 
 #top {
   background-color: #955e42;
   height: 50%;
-  padding: 10px;
+  padding: 0.5em;
   justify-content: center;
 }
 
@@ -324,15 +325,17 @@ table {
   }
 
   th {
-    padding-left: 5px;
+    padding-left: 0.5em;
+    font-size: 2.5vh;
   }
 
   td {
-    font-size: small;
+    font-size: 2.5vh;
+    padding: 0.15em;
   }
 
   tr {
-    height: 2.5em;
+    height: 6vh;
   }
 }
 
@@ -341,21 +344,22 @@ table {
   flex-direction: row;
   align-items: center;
   width: 95%;
-  margin: 10px 2.5% 0px;
+  margin: 0.5em 2.5% 0;
 }
 
 .table-wrapper {
   overflow-y: scroll;
-  margin: 10px 2.5%;
+  margin: 0.5em 2.5%;
   width: 95%;
   background-color: #dcdcdc;
   color: black;
-  border: 2px solid black;
+  border: 0.18em solid black;
 }
 
 h1 {
   font-weight: normal;
   margin: 0;
+  font-size: 5vh;
 }
 
 #result {
@@ -400,7 +404,24 @@ h1 {
 }
 
 .img-wrapper {
-  margin: 0 5px 0 5px;
+  margin: 0 0.25em;
   width: min-content;
 }
+
+.icon {
+  height: 2.5vh;
+  width: 2.5vh;
+}
+
+
+#doughnut-chart {
+  height: 100%;
+}
+
+#bar-chart {
+  height: 100%;
+  width: 80%;
+  font-size: 2vh;
+}
+
 </style>

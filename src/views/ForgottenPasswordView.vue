@@ -92,8 +92,8 @@ async function onSubmit() {
 #center {
   background-color: #955e42;
   width: 100%;
-  margin-left: 10px;
-  margin-bottom: 10px;
+  margin-left: 0.5em;
+  margin-bottom: 0.5em;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -103,17 +103,17 @@ async function onSubmit() {
 #wrapper {
   display: flex;
   flex-direction: column;
+  width: 19vw;
 }
 
 #exit {
-  margin: 10px 5px 10px 0px;
-  border: none;
-  border-radius: 5px;
+  margin: 0.7em 0.35em 0.7em 0px;
+  border-radius: 0.4em;
   background-color: #dcdcdc;
   width: fit-content;
-  height: 30px;
+  height: 5vh;
   color: black;
-  padding: 5px;
+  padding: 0.3em;
 }
 
 .btn-wrapper {
@@ -124,6 +124,7 @@ async function onSubmit() {
 p {
   margin-top: 0;
   font-family: Arial, Helvetica, sans-serif;
+  font-size: 2.5vh;
 }
 
 #back-to-login {

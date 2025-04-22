@@ -81,7 +81,7 @@ function capitalizeFirstLetter(input) {
             </div>
           </div>
           <div id="icon-wrapper">
-            <v-icon name="bi-trophy-fill" animation="pulse" scale="10" fill="#FFFFFF" />
+            <v-icon id="trophy-icon" name="bi-trophy-fill" animation="pulse" scale="10" fill="#FFFFFF" />
           </div>
         </div>
         <div class="content-box" id="left-bottom">
@@ -170,14 +170,14 @@ function capitalizeFirstLetter(input) {
 #left-top {
   background-color: #553739;
   height: 40%;
-  margin-left: 10px;
+  margin-left: 0.5em;
   display: flex;
   flex-direction: row;
-  padding: 10px;
+  padding: 0.5em;
 }
 
 #stats {
-  width: 60%;
+  width: 70%;
   height: 100%;
   display: flex;
   justify-content: space-between;
@@ -187,19 +187,21 @@ function capitalizeFirstLetter(input) {
 #left-bottom {
   background-color: #955e42;
   height: 60%;
-  margin-bottom: 10px;
-  margin-left: 10px;
+  margin-bottom: 0.5em;
+  margin-left: 0.5em;
   display: flex;
   justify-content: center;
   flex-direction: column;
 }
 
 h2 {
-  margin: 5px 2.5%;
+  margin: 0.2em 2.5%;
+  font-size: 4vh;
 }
 
 h3 {
-  margin: 5px 2.5%;
+  margin: 0.2em 2.5%;
+  font-size: 3.5vh;
 }
 
 #right {
@@ -219,7 +221,7 @@ h3 {
 #right-bottom {
   background-color: #748e54;
   height: 50%;
-  margin-bottom: 10px;
+  margin-bottom: 0.5em;
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -228,14 +230,16 @@ h3 {
 table {
   font-family: Arial, Helvetica, sans-serif;
   width: 95%;
-  border: 3px solid black;
+  border: 0.25em solid black;
   border-collapse: collapse;
-  margin: 0px 2.5% 5px;
+  margin: 0 2.5% 0.25em;
 }
 
 .result-table {
+  border: 0.2em solid black;
+  font-size: 2.5vh;
   th {
-    border: 3px solid black;
+    border: 0.2em solid black;
     background-color: #748e54;
     margin-left: 2px;
     text-align: left;
@@ -243,9 +247,9 @@ table {
 }
 
 .species-table {
-  font-size: small;
+  font-size: 2vh;
   th {
-    border: 3px solid black;
+    border: 0.25em solid black;
     background-color: #955e42;
     margin-left: 2px;
     text-align: left;
@@ -253,33 +257,33 @@ table {
 }
 
 td {
-  border: 1px solid black;
-  margin-left: 10px;
+  border: 0.1em solid black;
+  margin-left: 0.5em;
 }
 
 .header-wrapper {
   display: flex;
   flex-direction: row;
-  margin: 5px 2.5%;
+  margin: 0.25em 2.5%;
   width: 95%;
   align-items: center;
 
   h3 {
-    margin-right: 0px;
-    margin-left: 0px;
+    margin-right: 0;
+    margin-left: 0;
   }
 }
 
 #best {
   color: #00ff00;
-  margin-left: 4px;
-  margin-right: 4px;
+  margin-left: 0.2em;
+  margin-right: 0.2em;
 }
 
 #worst {
   color: red;
-  margin-left: 4px;
-  margin-right: 4px;
+  margin-left: 0.2em;
+  margin-right: 0.2em;
 }
 
 .headers {
@@ -309,19 +313,26 @@ select {
   align-items: center;
 
   h1 {
-    margin: 0px 5px;
+    margin: 0 0.2em;
     font-weight: normal;
-    font-size: xx-large;
+    font-size: 5.5vh;
   }
 
   h2 {
-    margin: 0px 5px;
+    margin: 0 0.2em;
+    font-size: 4vh;
   }
 }
 
 #icon-wrapper {
-  width: 40%;
+  width: 30%;
   display: flex;
   justify-content: center;
+}
+
+#trophy-icon {
+  height: 25vh;
+  width: 25vh;
+  margin-top: 3vh;
 }
 </style>

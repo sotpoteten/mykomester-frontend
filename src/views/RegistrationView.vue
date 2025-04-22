@@ -60,7 +60,7 @@ async function onSubmit() {
           <input type="password" id="password" v-model="password" @keyup.enter="onSubmit"/>
           <button class="submit" @click="onSubmit" :disabled="loading">
             Registrer deg
-            <v-icon name="ri-loader-2-fill" animation="spin" speed="slow" v-if="loading"/>
+            <v-icon id="loading-icon" name="ri-loader-2-fill" animation="spin" speed="slow" v-if="loading"/>
           </button>
           <p class="error">{{ errorMsg }}</p>
           <p>Felter merket med * må fylles ut.</p>
@@ -74,8 +74,8 @@ async function onSubmit() {
 #center {
   background-color: #955e42;
   width: 100%;
-  margin-left: 10px;
-  margin-bottom: 10px;
+  margin-left: 0.5em;
+  margin-bottom: 0.5em;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -83,12 +83,17 @@ async function onSubmit() {
 }
 
 p {
-  margin: 3px 0px;
+  margin: 0.2em 0px;
   font-family: Arial, Helvetica, sans-serif;
+  font-size: 2.5vh;
 }
 
 .error {
   color: red;
   font-weight: bold;
+}
+
+h2 {
+  font-size: 4vh;
 }
 </style>
