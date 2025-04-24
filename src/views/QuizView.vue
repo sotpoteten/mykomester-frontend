@@ -245,6 +245,17 @@ onKeyStroke(['l'], (e) => {
   updateTask()
 })
 
+onKeyStroke(['ArrowRight'], (e) => {
+  if (e.key === 'ArrowRight') {
+    e.preventDefault()
+  }
+  if (first.value == nrOfTasks.value * 10 - 10) {
+    return
+  }
+  first.value += 10
+  updateTask()
+})
+
 onKeyStroke(['PageUp'], (e) => {
   if (e.key === 'PageUp') {
     e.preventDefault()
@@ -259,6 +270,17 @@ onKeyStroke(['PageUp'], (e) => {
 onKeyStroke(['h'], (e) => {
   if (selected.value == false) return
   if (e.key === 'h') {
+    e.preventDefault()
+  }
+  if (first.value == 0) {
+    return
+  }
+  first.value -= 10
+  updateTask()
+})
+
+onKeyStroke(['ArrowLeft'], (e) => {
+  if (e.key === 'ArrowLeft') {
     e.preventDefault()
   }
   if (first.value == 0) {
@@ -344,8 +366,8 @@ const zoomImgs = ref([false, false, false])
       <p>
         <b>OPP</b> eller <b>J</b> & <b>NED</b> eller <b>K</b> for å bla mellom normlistestatuser
       </p>
-      <p><b>PAGEDOWN</b> eller <b>L</b> for å gå til neste oppgave</p>
-      <p><b>PAGEUP</b> eller <b>H</b> for å gå til forrige oppgave</p>
+      <p><b>PAGEDOWN</b>, <b>PIL HØYRE</b> eller <b>L</b> for å gå til neste oppgave</p>
+      <p><b>PAGEUP</b>, <b>PIL VENSTRE</b> eller <b>H</b> for å gå til forrige oppgave</p>
       <p><b>END</b> for å avslutte quizzen</p>
     </div>
   </Popover>
@@ -489,7 +511,7 @@ const zoomImgs = ref([false, false, false])
           </div>
         </div>
         <div id="navigation-wrapper">
-          <button class="submit" id="save" @click="showSaveDialog = true" disabled>
+          <button class="submit" id="save" @click="showSaveDialog = true" style="visibility: hidden">
             <v-icon name="md-save-round" id="save-icon" />
             Lagre quiz til senere
           </button>
