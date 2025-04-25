@@ -11,6 +11,7 @@ const email = ref('')
 const visible = ref(false)
 const isError = ref(false)
 const message = ref('')
+const loading = ref(false)
 const dialogStyle = ref({
   content: {
     padding: {
@@ -25,6 +26,7 @@ const dialogStyle = ref({
 })
 
 async function onSubmit() {
+  loading.value = true
   isError.value = false
   try {
     await axios.post(`http://${ip}:8080/glemt_passord`, email.value, {
@@ -33,7 +35,9 @@ async function onSubmit() {
       },
     })
     visible.value = true
+    loading.value = false
   } catch (error) {
+    loading.value = false
     console.log(error)
     if (error.status == 404) {
       isError.value = true
@@ -70,7 +74,10 @@ async function onSubmit() {
           <input type="text" id="username" v-model="email" />
           <div class="btn-wrapper">
             <button class="submit" id="exit" @click="router.push('/login')">Avbryt</button>
-            <button class="submit" @click="onSubmit">Tilbakestill passord</button>
+            <button class="submit" @click="onSubmit" :disabled="loading">
+              Tilbakestill passord
+              <v-icon name="ri-loader-2-fill" animation="spin" speed="slow" v-if="loading" />
+            </button>
           </div>
           <p v-if="isError">
             {{ message }}
@@ -85,8 +92,8 @@ async function onSubmit() {
 #center {
   background-color: #955e42;
   width: 100%;
-  margin-left: 10px;
-  margin-bottom: 10px;
+  margin-left: 0.5em;
+  margin-bottom: 0.5em;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -96,17 +103,17 @@ async function onSubmit() {
 #wrapper {
   display: flex;
   flex-direction: column;
+  width: 19vw;
 }
 
 #exit {
-  margin: 10px 5px 10px 0px;
-  border: none;
-  border-radius: 5px;
+  margin: 0.7em 0.35em 0.7em 0px;
+  border-radius: 0.4em;
   background-color: #dcdcdc;
   width: fit-content;
-  height: 30px;
+  height: 5vh;
   color: black;
-  padding: 5px;
+  padding: 0.3em;
 }
 
 .btn-wrapper {
@@ -117,6 +124,7 @@ async function onSubmit() {
 p {
   margin-top: 0;
   font-family: Arial, Helvetica, sans-serif;
+  font-size: 2.5vh;
 }
 
 #back-to-login {

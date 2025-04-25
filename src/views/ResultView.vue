@@ -6,6 +6,7 @@ import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import { useTokenStore } from '@/stores/token.js'
 import { ip } from '@/utils/httputils.js'
+import Popover from 'primevue/popover'
 
 const tokenStore = useTokenStore()
 const result = ref(null)
@@ -15,6 +16,9 @@ const score = ref(0)
 const maxScore = ref(0)
 const percent = ref(0)
 const wrongPercent = ref(0)
+const quizMode = ref('')
+let imgPops = []
+let notePops = []
 
 ;(async () => {
   try {
@@ -22,12 +26,18 @@ const wrongPercent = ref(0)
       `http://${ip}:8080/quizzes/result/latest/user/` + tokenStore.getUser(),
       tokenStore.getAuthorizationConfig(),
     )
+
     result.value = resultResponse.data
     answers.value = result.value.answers
     score.value = result.value.score
     maxScore.value = result.value.maxScore
     percent.value = (score.value / maxScore.value) * 100
     wrongPercent.value = 100 - percent.value
+    quizMode.value = result.value.quizMode
+    for (let i = 0; i < answers.value.length; i++) {
+      imgPops.push(ref())
+      notePops.push(ref())
+    }
   } catch (error) {
     console.error(error)
   }
@@ -159,11 +169,35 @@ function formatString(input) {
 }
 
 function capitalizeFirstLetter(input) {
-  return String(input).charAt(0).toUpperCase() + String(input).slice(1)
+  if (input == null) return ''
+  else return String(input).charAt(0).toUpperCase() + String(input).slice(1)
+}
+
+const toggleImg = (event) => {
+  imgPops[event.srcElement.parentElement.id].value[0].toggle(event)
+}
+
+const toggleNote = (event) => {
+  notePops[event.srcElement.parentElement.id].value[0].toggle(event)
 }
 </script>
 
 <template>
+  <Popover v-for="(answer, index) in answers" :key="answer" :ref="imgPops[index]">
+    <div class="popover-container">
+      <div v-for="(url, index) in answer.pictureUrl.split(',')" :key="url" class="img-wrapper">
+        <img :src="url" alt="bilde" class="popover-img" />
+        <p class="img-info">
+          Foto: {{ answer.photographer.split(',')[index] }}. Gjenbruk iht.
+          <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>
+        </p>
+      </div>
+    </div>
+  </Popover>
+  <Popover v-for="(answer, index) in answers" :key="answer" :ref="notePops[index]">
+    <p class="note"><b>Din merknad:</b> {{ answer.answeredNote }}</p>
+    <p class="note"><b>Riktig merknad:</b> {{ answer.correctNote }}</p>
+  </Popover>
   <div class="flex-container">
     <div class="header">
       <NavBar></NavBar>
@@ -181,23 +215,44 @@ function capitalizeFirstLetter(input) {
             <thead>
               <tr>
                 <th>Nr</th>
+                <th></th>
                 <th>Ditt svar</th>
-                <th></th>
+                <th v-if="quizMode == 'STANDARD'"></th>
+                <th v-if="quizMode == 'STANDARD' || quizMode == 'NORMLISTESTATUS'"></th>
                 <th>Fasit</th>
-                <th></th>
+                <th v-if="quizMode == 'STANDARD' || quizMode == 'NORMLISTESTATUS'"></th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="(answer, index) in answers" :key="answer">
                 <td>{{ index + 1 }}</td>
-                <td :class="{ green: answer.speciesCorrect, red: !answer.speciesCorrect }">
+                <td @click="toggleImg" :id="index" class="clickable">
+                  <v-icon class="icon" name="bi-image-fill" :id="index" />
+                </td>
+                <td
+                  :class="{ green: answer.speciesCorrect, red: !answer.speciesCorrect }"
+                  v-if="quizMode == 'STANDARD' || quizMode == 'ARTSBESTEMMELSE'"
+                >
                   {{ capitalizeFirstLetter(answer.answeredSpecies) }}
                 </td>
-                <td :class="{ green: answer.categoryCorrect, red: !answer.categoryCorrect }">
+                <td
+                  :class="{ green: answer.categoryCorrect, red: !answer.categoryCorrect }"
+                  v-if="quizMode == 'STANDARD' || quizMode == 'NORMLISTESTATUS'"
+                >
                   {{ formatString(answer.answeredCategory) }}
                 </td>
+                <td
+                  @click="toggleNote"
+                  :id="index"
+                  class="clickable"
+                  v-if="quizMode == 'STANDARD' || quizMode == 'NORMLISTESTATUS'"
+                >
+                  <v-icon class="icon" name="md-note-round" :id="index" />
+                </td>
                 <td>{{ capitalizeFirstLetter(answer.correctSpecies) }}</td>
-                <td>{{ formatString(answer.correctCategory) }}</td>
+                <td v-if="quizMode == 'STANDARD' || quizMode == 'NORMLISTESTATUS'">
+                  {{ formatString(answer.correctCategory) }}
+                </td>
               </tr>
             </tbody>
           </table>
@@ -210,10 +265,11 @@ function capitalizeFirstLetter(input) {
             :data="doughnutData"
             :options="doughnutOptions"
             class="w-full md:w-[30rem]"
+            id="doughnut-chart"
           />
         </div>
         <div class="content-box" id="bottom">
-          <Chart type="bar" :data="barData" :options="barOptions" />
+          <Chart type="bar" :data="barData" :options="barOptions" id="bar-chart" />
         </div>
       </div>
     </div>
@@ -224,8 +280,8 @@ function capitalizeFirstLetter(input) {
 #left {
   background-color: #553739;
   width: 60%;
-  margin-bottom: 10px;
-  margin-left: 10px;
+  margin-bottom: 0.5em;
+  margin-left: 0.5em;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -237,13 +293,13 @@ function capitalizeFirstLetter(input) {
   display: flex;
   flex-direction: column;
   width: 40%;
-  padding-bottom: 10px !important;
+  padding-bottom: 0.5em !important;
 }
 
 #top {
   background-color: #955e42;
   height: 50%;
-  padding: 10px;
+  padding: 0.5em;
   justify-content: center;
 }
 
@@ -269,15 +325,17 @@ table {
   }
 
   th {
-    padding-left: 5px;
+    padding-left: 0.5em;
+    font-size: 2.5vh;
   }
 
   td {
-    font-size: small;
+    font-size: 2.5vh;
+    padding: 0.15em;
   }
 
   tr {
-    height: 2.5em;
+    height: 6vh;
   }
 }
 
@@ -286,21 +344,22 @@ table {
   flex-direction: row;
   align-items: center;
   width: 95%;
-  margin: 10px 2.5% 0px;
+  margin: 0.5em 2.5% 0;
 }
 
 .table-wrapper {
   overflow-y: scroll;
-  margin: 10px 2.5%;
+  margin: 0.5em 2.5%;
   width: 95%;
   background-color: #dcdcdc;
   color: black;
-  border: 2px solid black;
+  border: 0.18em solid black;
 }
 
 h1 {
   font-weight: normal;
   margin: 0;
+  font-size: 5vh;
 }
 
 #result {
@@ -319,4 +378,50 @@ h1 {
 .red {
   color: red;
 }
+
+.popover-img {
+  height: 40vh;
+}
+
+.img-info {
+  font-size: x-small;
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.note {
+  font-family: Arial, Helvetica, sans-serif;
+  width: 20vw;
+}
+
+.clickable:hover {
+  cursor: pointer;
+}
+
+.popover-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.img-wrapper {
+  margin: 0 0.25em;
+  width: min-content;
+}
+
+.icon {
+  height: 2.5vh;
+  width: 2.5vh;
+}
+
+
+#doughnut-chart {
+  height: 100%;
+}
+
+#bar-chart {
+  height: 100%;
+  width: 80%;
+  font-size: 2vh;
+}
+
 </style>
