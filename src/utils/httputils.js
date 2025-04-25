@@ -2,7 +2,7 @@ import axios from 'axios'
 import { useTokenStore } from '@/stores/token.js'
 import router from '@/router/index.js'
 
-export const ip = 'localhost'
+export const ip = '79.76.53.84'
 
 export async function navigateToPage(page) {
   try {
