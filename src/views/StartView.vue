@@ -182,7 +182,7 @@ const updateRefs = () => {
   species.value = 'Hele pensum'
   if (specials.value == 'Alle pensumarter') {
     numOfTasks.value = 148
-  } else if (specials.value == '') {
+  } else {
     numOfTasks.value = 30
   }
 }

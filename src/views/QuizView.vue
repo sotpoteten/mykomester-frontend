@@ -29,6 +29,7 @@ taskNr.value = computed(() => (first.value + 10) / 10)
 let allSpecies = []
 const radioRefs = ref([])
 const radioFocus = ref(0)
+const note = computed(() => statusAnswer.value == 'SPISELIG_MED_MERKNAD')
 
 ;(async () => {
   try {
@@ -218,8 +219,10 @@ const scrollListUp = (event) => {
 
 const selectByEnter = (event) => {
   event.preventDefault
-  speciesAnswer.value = searchList.value[selectedIndex.value]
-  selected.value = true
+  if (selectedIndex.value != -1) {
+    speciesAnswer.value = searchList.value[selectedIndex.value]
+    selected.value = true
+  }
 }
 
 onKeyStroke(['PageDown'], (e) => {
@@ -234,7 +237,7 @@ onKeyStroke(['PageDown'], (e) => {
 })
 
 onKeyStroke(['l'], (e) => {
-  if (selected.value == false) return
+  if (!selected.value || note.value) return
   if (e.key === 'l') {
     e.preventDefault()
   }
@@ -268,7 +271,7 @@ onKeyStroke(['PageUp'], (e) => {
 })
 
 onKeyStroke(['h'], (e) => {
-  if (selected.value == false) return
+  if (!selected.value || note.value) return
   if (e.key === 'h') {
     e.preventDefault()
   }
@@ -298,7 +301,7 @@ onKeyStroke(['End'], (e) => {
 })
 
 onKeyStroke(['k'], (e) => {
-  if (selected.value == false) return
+  if (!selected.value || note.value) return
   if (e.key === 'k') {
     e.preventDefault()
   }
@@ -309,7 +312,7 @@ onKeyStroke(['k'], (e) => {
 })
 
 onKeyStroke(['j'], (e) => {
-  if (selected.value == false) return
+  if (!selected.value || note.value) return
   if (e.key === 'j') {
     e.preventDefault()
   }
